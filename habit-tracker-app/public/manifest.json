@@ -1,21 +1,29 @@
 {
-  "name": "Habit.lio",
+  "manifest_version": 3,
+  "name": "Habit-lio",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAs9CeasEAhACIaGJYFRQdFm1A3K2gByj2Yy7bqh172IgvV758c5nG5/ToGEqdtNp1dWwX+wrscmEdJxtP4hC3Bx1IFr5+G8IyF2WSg0/Rdv0azfsQQzgQbK2Od/MMgADF/pUGTY9QCirMtlaKR18phad++viNM+3L7t3DxUAYLiSIAvdTP/uWV1WwNwCdIyYpjTE8SVNwwFRQ1bfxQ5nXQaIs+2N2y82qH5Iw2UT9ZTcHCDEcNmWcjYoBAtEMrIJ24rBBhvM8QT84zBFFwJeiJjcgVMpVUkbEsj68zCFnxcsTl1MG/J6oHNgawK64+FvQ+fWoPasttRmW7kWj5zfbRwIDAQAB",
   "description": "A React-powered habit-tracking Chrome Extension",
   "version": "1.0",
-  "manifest_version": 3,
+  "permissions": [
+    "identity",
+    "sidePanel"
+  ],
+  "oauth2": {
+    "client_id": "1018917693213-2018mdae8clgo0i0h720hloasfadb4m5.apps.googleusercontent.com",
+    "scopes": [
+      "https://www.googleapis.com/auth/userinfo.email",
+      "https://www.googleapis.com/auth/userinfo.profile"
+    ]
+  },
   "icons": {
     "16": "icons/Habitlio-Icon16.png",
     "32": "icons/Habitlio-Icon32.png",
     "48": "icons/Habitlio-Icon48.png",
     "128": "icons/Habitlio-Icon128.png"
   },
-  "permissions": [
-    "sidePanel"
-  ],
   "action": {
     "default_title": "Open Habit.lio"
   },
-
   "side_panel": {
     "default_path": "login.html"
   },
