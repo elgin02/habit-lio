@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { GoogleAuthProvider, signInWithCredential, onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase";
-import { createUserProfile, listHabits, createHabit, deleteHabit } from "./firestore";
+import { createUserProfile, listHabits, createHabit, deleteHabit, exportHabits } from "./firestore";
 import './App.css';
 import Menu from "./Menu";
 
@@ -99,6 +99,16 @@ function App() {
         }
     };
 
+    const handleExportHabits = async () => {
+        if (!user) return;
+        try {
+            console.log("Attempted export");
+            await exportHabits(user.uid);
+        } catch (error) {
+            console.error("Error exporting habits:", error);
+        }
+    };
+
     return (
         <div className="card">
             <h1>Habit-lio</h1>
@@ -140,7 +150,9 @@ function App() {
                                 </li>
                             ))}
                         </ul>
-
+                        <div>
+                            <button onClick={() => handleExportHabits()}>Export Habits to CSV</button>
+                        </div>
                         {habits.length === 0 && <p>No habits yet. Create one to get started!</p>}
                     </div>
 
