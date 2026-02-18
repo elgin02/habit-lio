@@ -1,0 +1,135 @@
+.box {
+    width: 277px;
+    height: 530px;
+    background-color: #363576;
+    border: 2px solid silver;
+    border-radius: 25px;
+
+    display: flex;              /* use flex layout */
+    flex-direction: column;     /* stack elements vertically */
+    justify-content: center;    /* center vertically inside the box */
+    align-items: center;        /* center horizontally */
+
+    padding: 20px;
+    box-sizing: border-box;
+
+    position: relative;
+}
+
+.title {
+    font-weight: 800;
+    font-size: 23px;
+    line-height: 29px;
+
+    position: absolute;
+  
+    left: 43px;
+    top:  -7px;
+}
+
+.signin_text {
+    font-weight: 900;
+    font-size: 18px;
+    line-height: 22px;
+
+    position: absolute;
+
+    top: 90px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: -30px;
+}
+
+.field button {
+    height: 40px;
+}
+
+.field_label {
+    background: black;
+    color: white;
+    padding: 1px 16px;
+    border-radius: 12px 12px 0 0;
+    text-align: left;
+}
+
+.field_input {
+    display: flex;
+    align-items: center;
+    background: white;
+    color: black;
+    padding: 14px 16px;
+    border-radius: 0 0 12px 12px;
+    width: 170px;
+}
+
+.input_wrapper {
+    position: relative;
+}
+
+.eye {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    user-select: none;
+}
+
+.eye img {
+    width: 20px;
+    height: 20px;
+}
+
+.log_in,
+.sign_up {
+    bottom: 10px;
+    position: absolute;
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-align: center;
+}
+
+.google_box {
+    position: absolute;
+    justify-content: center;
+    align-items: center;
+    bottom: 45px;
+
+    width: 205px;
+    height: 40px;
+    border-radius: 12px;
+   
+    background-color: white;
+
+    cursor: pointer;
+}
+
+.google_box:hover {
+    border: 2px solid #4285F4;
+}
+
+.google_icon {
+    position: absolute;
+    left: 14px;
+    top: 10px;
+    color: black;
+}
+
+.google_icon img {
+    width: 20px;
+    height: 20px;
+}
+
+.google_signin_text {
+    color: black;
+    text-align: left;
+    position: absolute;
+    top: -9px;
+    left: 42px;
+    font-weight: 600;
+    font-size: 1rem;
+}
