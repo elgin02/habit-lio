@@ -20,6 +20,7 @@ function LoginInput() {
                 <form className="field" onSubmit={handleSubmit}>
                     <UsernameInput username={username} setUsername={setUsername} />
                     <PasswordInput  password={password} setPassword={setPassword} />
+                    <RememberMe username={username} setUsername={setUsername}/>
                     <button className="login_button">LOGIN</button>
                 </form>
                 <div>
@@ -44,7 +45,41 @@ function GoogleSignin() {
             <span className="google_icon"><img src={googleIcon} alt="Google icon"/></span>
             <p className="google_signin_text">Sign in with Google</p>
         </button>
-    )
+    );
+}
+
+function RememberMe({ username, setUsername }) {
+    const [checked, setChecked] = useState(false);
+   
+    useEffect(() => {
+        const savedUsername = localStorage.getItem('rememberedUsername') || "";
+        if (savedUsername) {
+            setUsername(savedUsername);
+            setChecked(true)
+        }
+    }, [setUsername]);
+
+    useEffect(() => {
+        if (checked) {
+            localStorage.setItem("rememberedUsername", username);
+        } else {
+            localStorage.removeItem("rememberedUsername");
+        }
+    }, [checked, username]);
+
+    return (
+        <div>
+            <label className="remember_me">
+                <input
+                    type="checkbox"
+                    checked={checked}
+                    onChange={() => setChecked(!checked)}
+                />
+                <span class="custom_checkbox"></span>
+                Remember Me
+            </label>
+        </div>
+    );
 }
 
 function LoginFrame() {
@@ -76,17 +111,18 @@ function PasswordInput({ password, setPassword }) {
 
             <div className="input_wrapper">
                 <input 
-                type={showPassword ? "text" : "password"} /* Toggles password visibility */
-                placeholder="Input"
-                className="field_input" 
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                    type={showPassword ? "text" : "password"} /* Toggles password visibility */
+                    placeholder="Input"
+                    className="field_input" 
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                 />
 
                 <span className="eye" onClick={() => setShowPassword(!showPassword)}>
                     <img 
-                    src={showPassword ? notHiddenIcon : hiddenIcon}
-                    alt="toggle password"
+                        src={showPassword ? notHiddenIcon : hiddenIcon}
+                        draggable={false}
+                        alt="toggle password"
                     />
                 </span>
             </div>
@@ -103,11 +139,11 @@ function UsernameInput({ username, setUsername }) {
 
             <div className="input_wrapper">
                 <input 
-                type="text"
-                placeholder="Input"
-                className="field_input" 
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                    type="text"
+                    placeholder="Input"
+                    className="field_input" 
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
                 />
             </div>
         </div>

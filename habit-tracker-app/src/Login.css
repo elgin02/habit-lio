@@ -41,6 +41,7 @@
     height: 55px;
     border: 1px solid silver;
     font-size: 1.4rem;
+    margin-top: 15px;
 }
 
 .field button:hover {
@@ -72,7 +73,7 @@
     border-radius: 0 0 12px 12px;
     border: 1px solid silver;
     outline: none;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     border-top: none;
 }
 
@@ -146,4 +147,36 @@
     font-weight: 600;
     left: 25%;
     font-size: 1.2rem;
+}
+
+.remember_me {
+  display: flex;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.remember_me input {
+  display: none;
+}
+
+.custom_checkbox {
+  width: 18px;
+  height: 18px;
+  border: 2px solid silver;
+  border-radius: 4px;
+  display: inline-block;
+  position: relative;
+}
+
+.remember_me input:checked + .custom_checkbox::after {
+  content: "";
+  position: absolute;
+  left: 4.5px;
+  top: 0px;
+  width: 5px;
+  height: 10px;
+  border: solid silver;
+  border-width: 0 4px 4px 0;
+  transform: rotate(45deg);
 }
