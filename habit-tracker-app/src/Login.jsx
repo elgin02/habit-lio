@@ -12,6 +12,7 @@ function LoginInput() {
     const [password, setPassword] = useState("");
     const handleSubmit = (e) => {
         e.preventDefault();
+        // TODO...
     }
 
     return (
@@ -21,8 +22,10 @@ function LoginInput() {
                     <PasswordInput  password={password} setPassword={setPassword} />
                     <button className="login_button">LOGIN</button>
                 </form>
-                <GoogleSignin />
-                <Signup />
+                <div>
+                    <GoogleSignin />
+                    <Signup />
+                </div>
             </div>
     );
 }
@@ -37,10 +40,10 @@ function Signup() {
 
 function GoogleSignin() {
     return (
-        <div className="google_box">
-            <span className="google_icon"><img src={googleIcon} /></span>
+        <button className="google_box">
+            <span className="google_icon"><img src={googleIcon} alt="Google icon"/></span>
             <p className="google_signin_text">Sign in with Google</p>
-        </div>
+        </button>
     )
 }
 
@@ -50,7 +53,7 @@ function LoginFrame() {
         <div className="login_box">
             <p className="signin_text">{signinText}</p>
            
-           <LoginInput />
+            <LoginInput />
         </div>
     );
 }
@@ -66,7 +69,7 @@ function PasswordInput({ password, setPassword }) {
     const [showPassword, setShowPassword] = useState(false);
 
     return (
-        <div>
+        <div className="field">
             <div className="field_label">
                 Password
             </div>
@@ -93,7 +96,7 @@ function PasswordInput({ password, setPassword }) {
 
 function UsernameInput({ username, setUsername }) {
     return (
-      <div>
+      <div className="field">
             <div className="field_label">
                 Username
             </div>
