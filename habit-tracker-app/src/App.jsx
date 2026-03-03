@@ -8,6 +8,7 @@ import './Login.css';
 import {Eye, EyeOff} from 'lucide-react';
 import googleIcon from './icons/google_icon.png';
 import Menu from "./Menu";
+import HabitCreate from "./habitCreate";
 
 function App() {
     const [user, setUser] = useState(null);
@@ -176,7 +177,7 @@ function App() {
                     />
                     <p>Welcome, <strong>{user.email}</strong>!</p>
 
-                    // Modal for habit adding
+                    {/* Modal for habit adding */}
                     {isModalOpen && (
                         <div className="modal-overlay">
                             <div className="modal-content">
@@ -224,7 +225,7 @@ function App() {
                         </div>
                     )}
                     <div>
-                        // Display habits
+                        {/* // Display habits */}
                         <h2>Your Habits</h2>
                         <ul>
                             {habits.map((habit) => (
@@ -247,7 +248,7 @@ function App() {
                         </div>
                         {habits.length === 0 && <p>No habits yet. Create one to get started!</p>}
                     </div>
-
+                    <br />
                     <button onClick={handleSignOut}>Sign Out</button>
                 </div>
             ) : ( // sign in/sign up
@@ -322,39 +323,3 @@ function App() {
 
 export default App;
 
-
-//import { useState } from 'react'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
-// import './App.css'
-//
-// function App() {
-//   const [count, setCount] = useState(0)
-//
-//   return (
-//     <>
-//       <div>
-//         <a href="https://vite.dev" target="_blank">
-//           <img src={viteLogo} className="logo" alt="Vite logo" />
-//         </a>
-//         <a href="https://react.dev" target="_blank">
-//           <img src={reactLogo} className="logo react" alt="React logo" />
-//         </a>
-//       </div>
-//       <h1>Vite + React</h1>
-//       <div className="card">
-//         <button onClick={() => setCount((count) => count + 1)}>
-//           count is {count}
-//         </button>
-//         <p>
-//           Edit <code>src/App.jsx</code> and save to test HMR
-//         </p>
-//       </div>
-//       <p className="read-the-docs">
-//         Click on the Vite and React logos to learn more
-//       </p>
-//     </>
-//   )
-// }
-//
-// export default App
