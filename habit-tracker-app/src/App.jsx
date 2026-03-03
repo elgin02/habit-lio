@@ -177,7 +177,7 @@ function App() {
                     />
                     <p>Welcome, <strong>{user.email}</strong>!</p>
 
-                    // Modal for habit adding
+                    {/* Modal for habit adding */}
                     {isModalOpen && (
                         <div className="modal-overlay">
                             <div className="modal-content">
@@ -225,7 +225,7 @@ function App() {
                         </div>
                     )}
                     <div>
-                        // Display habits
+                        {/* // Display habits */}
                         <h2>Your Habits</h2>
                         <ul>
                             {habits.map((habit) => (
