@@ -36,6 +36,9 @@ describe('HabitCreate Component', () => {
         expect(await screen.findByLabelText(/Habit Name/i)).toBeInTheDocument();
         expect(screen.getByLabelText(/Habit Description/i)).toBeInTheDocument();
     });
+    // Basic test to check that the form submission creates a new habit. 
+    // This is a critical test to ensure that the core functionality of habit creation 
+    // works as expected.
     test('creates a new habit on form submission', async () => {
         const user = userEvent.setup();
         render(<HabitCreate />);
@@ -49,8 +52,13 @@ describe('HabitCreate Component', () => {
         fireEvent.change(nameInput, { target: { value: 'Exercise' } });
         fireEvent.change(descriptionInput, { target: { value: 'Daily exercise routine' } });
         fireEvent.click(submitButton);
+        
         // Add assertions to check if the habit was created successfully
-        // This could involve checking for a success message or verifying that the new habit appears in the habit list
-            
+        // This could involve checking for a success message 
+        // or verifying that the new habit appears in the habit list
+        
+        render(<App />);
+        // We should see the new habit in the habit list after creation
+        expect(screen.getByText(/Exercise/i)).toBeInTheDocument();
     });
 });
