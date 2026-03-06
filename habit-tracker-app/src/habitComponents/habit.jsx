@@ -2,7 +2,7 @@ import HabitEdit from "./habitEdit";
 import { useEffect } from "react";
 import '../css/habit.css'
 
-function Habit({habit}){
+function Habit({habit, uid, loadHabits}){
     const dynamicFontSize = habit.name.length > 15 ? "20px" : "30px";
     console.log("Habit Props:", habit); // Debugging line to check the props being passed to Habit component
   return(
@@ -18,8 +18,9 @@ function Habit({habit}){
               {habit.goal.unit ? habit.goal.unit : "steps"}/{habit.period ? habit.period : "week"}</h2>
         </div>
         <div className="habit-streak-edit">
-          <h3 className="habit-streak" title="Habit Streak">🔥{habit.streak ? habit.streak : "0"}</h3>
-          <HabitEdit />
+          {/* <h3 className="habit-streak" title="Habit Streak">🔥{habit.streak ? habit.streak : "0"}</h3> */}
+          <h3 className="habit-streak" title="Habit Streak">🔥0</h3>
+          <HabitEdit habit={habit} uid={uid} loadHabits={loadHabits} />
         </div>
       </div>
       <br />
