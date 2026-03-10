@@ -1,17 +1,16 @@
 .login_box {
-    min-height: 650px;
-    min-width: 320px;
-    width: 100%;
+    width: 277px;
+    height: 530px;
     background-color: #363576;
     border: 2px solid silver;
     border-radius: 25px;
 
     display: flex;              /* use flex layout */
-    /*justify-content: center;    /* center vertically inside the box */
-    flex-direction: column;
+    flex-direction: column;     /* stack elements vertically */
+    justify-content: center;    /* center vertically inside the box */
     align-items: center;        /* center horizontally */
-    gap: 20px;
-    padding: 25px;
+
+    padding: 20px;
     box-sizing: border-box;
 
     position: relative;
@@ -19,62 +18,52 @@
 
 .title {
     font-weight: 800;
-    font-size: 28px;
+    font-size: 23px;
     line-height: 29px;
-    margin-top: 10px;
+
+    position: absolute;
+  
+    left: 43px;
+    top:  -7px;
 }
 
 .signin_text {
-    position: relative;
     font-weight: 900;
-    font-size: 25px;
+    font-size: 18px;
+    line-height: 22px;
+
+    position: absolute;
+
+    top: 90px;
 }
 
 .field {
     display: flex;
     flex-direction: column;
-    width: 100%;
-    min-width: 250px;
+    gap: 8px;
+    margin-top: -30px;
 }
 
 .field button {
-    height: 55px;
-    border: 1px solid silver;
-    font-size: 1.4rem;
-    margin-top: 15px;
+    height: 40px;
 }
-
-.field button:hover {
-    border:2px solid #646cff;
-}
-
-.field_label,
-.field_input {
-    box-sizing: border-box;
-    width: 100%;
-}
-
 
 .field_label {
     background: #26265B;
     color: white;
-    padding: 2px 16px;
+    padding: 1px 16px;
     border-radius: 12px 12px 0 0;
-    border: 1px solid silver;
     text-align: left;
-    border-bottom: none;
 }
 
 .field_input {
+    display: flex;
     align-items: center;
     background: white;
     color: black;
     padding: 14px 16px;
     border-radius: 0 0 12px 12px;
-    border: 1px solid silver;
-    outline: none;
-    margin-bottom: 15px;
-    border-top: none;
+    width: 170px;
 }
 
 .input_wrapper {
@@ -83,8 +72,8 @@
 
 .eye {
     position: absolute;
-    right: 6%;
-    top: 40%;
+    right: 12px;
+    top: 50%;
     transform: translateY(-50%);
     cursor: pointer;
     user-select: none;
@@ -97,87 +86,65 @@
 
 .log_in,
 .sign_up {
-    position: relative;    
-    align-items: center;
-    font-size: 1rem;
-    font-weight: 600;
-    text-align: center;
     bottom: 10px;
+    position: absolute;
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-align: center;
 }
 
 .google_box {
-    display: flex;
+    position: absolute;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
+    bottom: 45px;
 
-    width: 100%;
-    max-width: 260px;
+    width: 205px;
     height: 40px;
     border-radius: 12px;
-    
+   
     background-color: white;
-    cursor: pointer;
 
-    margin-top: 80%;
-    
+    cursor: pointer;
 }
 
 .google_box:hover {
-    border:2px solid #646cff;;
+    border: 2px solid #4285F4;
 }
 
 .google_icon {
-    position: relative;
-    right: 48%;
-    top: 18%;
-
+    position: absolute;
+    left: 14px;
+    top: 10px;
     color: black;
+    background-color: rgba(255, 255, 255, 0.75);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    font-size: 20px;
+    /* border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px; */
 }
 
-.google_icon img {
-    width: 20px;
-    height: 20px;
+#email:focus, #password:focus{
+    outline: none;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
+}
+
+#login{
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    width: 8em;
+    font-weight: bolder;
+    font-size: 2em;
+    border: transparent;
+    border-radius: 10px;
 }
 
 .google_signin_text {
     color: black;
-    position: absolute;
     text-align: left;
+    position: absolute;
+    top: -9px;
+    left: 42px;
     font-weight: 600;
-    left: 25%;
-    font-size: 1.2rem;
-}
-
-.remember_me {
-  display: flex;
-  gap: 8px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 600;
-}
-
-.remember_me input {
-  display: none;
-}
-
-.custom_checkbox {
-  width: 18px;
-  height: 18px;
-  border: 2px solid silver;
-  border-radius: 4px;
-  display: inline-block;
-  position: relative;
-}
-
-.remember_me input:checked + .custom_checkbox::after {
-  content: "";
-  position: absolute;
-  left: 4.5px;
-  top: 0px;
-  width: 5px;
-  height: 10px;
-  border: solid silver;
-  border-width: 0 4px 4px 0;
-  transform: rotate(45deg);
+    font-size: 1rem;
 }

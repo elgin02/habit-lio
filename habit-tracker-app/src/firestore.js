@@ -38,9 +38,12 @@ export const getUserProfile = async (uid) => {
 export const createHabit = async (uid, habit) => {
   const habitsRef = collection(db, "users", uid, "habits");
   const habitDoc = {
-    title: habit.title,
+    name: habit.name,
     description: habit.description || "",
-    frequency: habit.frequency || "daily",
+    color: habit.color || "#000000",
+    type: habit.type || "General",
+    goal: habit.goal || { value: 1, unit: "minute" },
+    taskDays: habit.taskDays || "Everyday",
     isActive: habit.isActive ?? true,
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp()
@@ -49,6 +52,37 @@ export const createHabit = async (uid, habit) => {
   const docRef = await addDoc(habitsRef, habitDoc);
   return docRef;
 };
+
+export const handleSaveHabit = async (user, updatedHabit) => {
+  console.log("user:", user);
+  console.log("editedHabit:", updatedHabit);
+  console.log("editedHabit.id:", updatedHabit?.id);
+  try {
+    console.log("updatedHabit.id:", updatedHabit.id);
+    const habitRef = doc(db, "users", user.uid, "habits", updatedHabit.id);
+
+    await updateDoc(habitRef, {
+      name: updatedHabit.name,
+      description: updatedHabit.description || "",
+      color: updatedHabit.color || "#000000",
+      type: updatedHabit.type || "General",
+      goal: updatedHabit.goal || { value: 1, unit: "minute" },
+      taskDays: updatedHabit.taskDays || "Everyday",
+      isActive: updatedHabit.isActive ?? true,
+    });
+
+    // setHabits((prev) =>
+    //   prev.map((habit) =>
+    //     habit.id === updatedHabit.id ? updatedHabit : habit
+    //   )
+    // );
+
+    // setShowEditPopup(false);
+    // setEditingHabit(null);
+  } catch (error) {
+    console.error("Failed to update habit:", error);
+  }
+}
 
 export const listHabits = async (uid) => {
   const habitsRef = collection(db, "users", uid, "habits");
