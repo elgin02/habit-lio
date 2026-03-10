@@ -179,6 +179,9 @@ function CreateHabitForm(props) {
                 };
 
                 await handleAddHabit(createdHabit);
+                chrome.runtime.sendMessage({ type: "notify", 
+                    reason: "habitCreation", 
+                    message: `You have successfully created the habit: ${createdHabit.name}!`});
 
                 setClicked(true);
                 props.onSubmission();
