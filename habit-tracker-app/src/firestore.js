@@ -44,7 +44,10 @@ export const createHabit = async (uid, habit) => {
     color: habit.color || "#000000",
     type: habit.type || "General",
     goal: habit.goal || { value: 1, unit: "minute" },
-    taskDays: habit.taskDays || "Everyday",
+    reminder: habit.reminder || { activated: false, time: "", message: "" },
+    priority: habit.priority || "none",
+    startDate: habit.startDate || null,
+    endDate: habit.endDate || null,
     isActive: habit.isActive ?? true,
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp()

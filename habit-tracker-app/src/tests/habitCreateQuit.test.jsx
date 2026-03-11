@@ -114,7 +114,7 @@ describe('HabitCreate Component', () => {
         await user.clear(nameInput);
         await user.type(nameInput, 'Reduce Smoking');
         await user.type(descriptionInput, 'Cut down on smoking gradually');
-        fireEvent.change(colorInput, { target: { value: '#ff0000' } });
+        await user.selectOptions(colorInput, '#f8aaaa');
         await user.click(quitButton);
         await user.click(submitButton);
 
@@ -124,7 +124,7 @@ describe('HabitCreate Component', () => {
                 name: 'Reduce Smoking',
                 description: 'Cut down on smoking gradually',
                 type: 'Quit',
-                color: '#ff0000',
+                color: '#f8aaaa',
                 isActive: true
             })
         );
@@ -162,7 +162,7 @@ describe('HabitCreate Component', () => {
         await user.clear(nameInput);
         await user.type(nameInput, 'Reduce Smoking');
         await user.type(descriptionInput, 'Cut down on smoking gradually');
-        fireEvent.change(colorInput, { target: { value: '#ff0000' } });
+        await user.selectOptions(colorInput, '#f8aaaa');
         await user.click(quitButton);
         await user.selectOptions(goalPeriod, 'Day');
         fireEvent.change(goalValue, { target: { value: '1' } });
@@ -174,7 +174,7 @@ describe('HabitCreate Component', () => {
                 name: 'Reduce Smoking',
                 description: 'Cut down on smoking gradually',
                 type: 'Quit',
-                color: '#ff0000',
+                color: '#f8aaaa',
                 goal: { value: "1", period: 'Day', 
                     unit: 'steps' , taskDays: 'everyday', taskDaysSelected: null},
                 isActive: true
@@ -216,7 +216,7 @@ describe('HabitCreate Component', () => {
         await user.clear(nameInput);
         await user.type(nameInput, 'Reduce Smoking');
         await user.type(descriptionInput, 'Cut down on smoking gradually');
-        fireEvent.change(colorInput, { target: { value: '#ff0000' } });
+        await user.selectOptions(colorInput, '#f8aaaa');
         await user.click(quitButton);
         await user.selectOptions(goalPeriod, 'Week');
         fireEvent.change(goalValue, { target: { value: '100' } });
@@ -229,7 +229,7 @@ describe('HabitCreate Component', () => {
                 name: 'Reduce Smoking',
                 description: 'Cut down on smoking gradually',
                 type: 'Quit',
-                color: '#ff0000',
+                color: '#f8aaaa',
                 goal: { value: "100", period: 'Week', 
                     unit: 'steps' , taskDays: 'everyday', taskDaysSelected: null},
                 isActive: true
@@ -273,7 +273,7 @@ describe('HabitCreate Component', () => {
         await user.clear(nameInput);
         await user.type(nameInput, 'Reduce Smoking');
         await user.type(descriptionInput, 'Cut down on smoking gradually');
-        fireEvent.change(colorInput, { target: { value: '#ff0000' } });
+        await user.selectOptions(colorInput, '#f8aaaa');
         await user.click(quitButton);
         await user.selectOptions(goalPeriod, 'Week');
         fireEvent.change(goalValue, { target: { value: '100' } });
@@ -296,7 +296,7 @@ describe('HabitCreate Component', () => {
                 name: 'Reduce Smoking',
                 description: 'Cut down on smoking gradually',
                 type: 'Quit',
-                color: '#ff0000',
+                color: '#f8aaaa',
                 goal: { value: "100", period: 'Week', 
                     unit: 'steps' , taskDays: 'everyday', taskDaysSelected: null},
                 reminder: { activated: true, time: "13:00", message: "Yes" },
@@ -341,7 +341,7 @@ describe('HabitCreate Component', () => {
         await user.clear(nameInput);
         await user.type(nameInput, 'Reduce Smoking');
         await user.type(descriptionInput, 'Cut down on smoking gradually');
-        fireEvent.change(colorInput, { target: { value: '#ff0000' } });
+        await user.selectOptions(colorInput, '#f8aaaa');
         await user.click(quitButton);
         await user.selectOptions(goalPeriod, 'Week');
         fireEvent.change(goalValue, { target: { value: '100' } });
@@ -366,7 +366,7 @@ describe('HabitCreate Component', () => {
                 name: 'Reduce Smoking',
                 description: 'Cut down on smoking gradually',
                 type: 'Quit',
-                color: '#ff0000',
+                color: '#f8aaaa',
                 goal: { value: "100", period: 'Week', 
                     unit: 'steps' , taskDays: 'everyday', taskDaysSelected: null},
                 reminder: { activated: true, time: "13:00", message: "Yes" },

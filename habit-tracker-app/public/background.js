@@ -17,7 +17,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         type: "basic",
         iconUrl: chrome.runtime.getURL("icons/Habitlio-Icon128.png"),
         title: chosenTitle[Math.floor(Math.random() * chosenTitle.length)],
-        message: message.message,
+        message: message.message
       });
     }
     return true;

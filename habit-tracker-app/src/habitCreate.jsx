@@ -196,8 +196,19 @@ function CreateHabitForm(props) {
                         <br />
                         <span>
                             <label htmlFor="color-picker">Set Color: </label>
-                            <input type="color" id="color-picker" 
-                            name="emoji-color" value={color} onChange={(e) => setColor(e.target.value)}/>
+                            <select name="color-picker" id="color-picker" value={color} onChange={(e) => setColor(e.target.value)}>
+                                <option value="#b9b7b7">Default</option>
+                                <option value="#f8aaaa">Red</option>
+                                <option value="#aaffaa">Green</option>
+                                <option value="#aaaaff">Blue</option>
+                                <option value="#ffffaa">Yellow</option>
+                                <option value="#ffb6c1">Pink</option>
+                                <option value="#ffa500">Orange</option>
+                                <option value="#800080">Purple</option>
+                            </select>
+
+                            {/* <input type="color" id="color-picker" 
+                            name="emoji-color" value={color} onChange={(e) => setColor(e.target.value)}/> */}
                         </span>
                     </div>
                     <div id ="habit-info">
