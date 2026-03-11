@@ -46,6 +46,16 @@
     background-color: #C0C0C0;
 }
 
+#submit-button1{
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#submit-button1:disabled{
+    cursor: not-allowed;
+}
+
 #habit-layout{
     display: grid;
     grid-template-columns: 0.25fr 1fr;
@@ -249,6 +259,14 @@
     justify-content: center;
 }
 
+#task-days-select{
+    display: flex;
+    /* align-items: center; */
+    justify-content: center;
+    /* width: 3em; */
+    border: 1px solid black;
+}
+
 #reminder-message{
     text-align: center;
     font-size: 18px;
@@ -273,6 +291,7 @@
 #add-btn{
     background-color: rgba(255, 255, 255, 0);
 }
+
 
 h2,p{
     color: black;

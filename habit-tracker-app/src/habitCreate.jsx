@@ -5,6 +5,7 @@ import { AuthContext } from "./AuthContext";
 import { createUserProfile, listHabits, createHabit, 
     deleteHabit, exportHabits } from "./firestore";
 import './habit-creation.css'
+import Calendar from './habitComponents/calendar';
 
 import { X, Flame, Activity, Volleyball, HouseHeart, GraduationCap, Plus, ChevronLeft, CirclePlus, DockIcon} from 'lucide-react'
 import { doc } from 'firebase/firestore';
@@ -111,9 +112,77 @@ function HabitWindow(props) {
     );
 }
 
+function CheckBoxDay({ name, setDaysSelected }) {
+    // Start checked by default
+    const [checked, setChecked] = useState(false);
+
+    const handleToggle = () => {
+        const nextCheckedState = !checked;
+        setChecked(nextCheckedState);
+
+        if (nextCheckedState) {
+            // Logic to ADD to the array (assuming setDaysSelected is an array setter)
+            setDaysSelected(prev => [...prev, name]);
+        } else {
+            // Logic to REMOVE from the array
+            setDaysSelected(prev => prev.filter(day => day !== name));
+        }
+    };
+
+    return (
+        <div style={{ fontSize: "14px" }}>
+            <input 
+                type="checkbox"
+                id={name}
+                name={name}
+                checked={checked}
+                // FIXED: Wrapped in an arrow function so it only runs on click
+                onChange={() => handleToggle()} 
+            />
+            <label htmlFor={name}>{name}</label>
+        </div>
+    );
+}
+
+
+function SelectTaskDays({mode, setClicked, daysSelected, setDaysSelected}) {
+    // const [error, showError] = useState(false);
+    const isError = daysSelected.length === 0;
+    setClicked(mode === "specific_days" && isError);
+    console.log("DAYS:" + daysSelected);
+    return(
+        <div>
+            {mode === "specific_month_days" && (
+                <div id="task-days-select">
+                    <Calendar daysSelected={daysSelected} setDaysSelected={setDaysSelected}/>
+                </div>
+            )}
+            {mode === "specific_days" && (
+                <div>
+                    <p id="days-error" 
+                    style={{color: "red", fontSize: "14px"}} hidden={!isError}>
+                        Error: Please select at least one day.
+                    </p>
+                    <label htmlFor='specific-days' style={{fontSize: "16px"}}>
+                        Choose Day(s) to accomplish the habit: </label>
+                    <CheckBoxDay name="Monday" setDaysSelected={setDaysSelected}/>
+                    <CheckBoxDay name="Tuesday" setDaysSelected={setDaysSelected}/>
+                    <CheckBoxDay name="Wednesday" setDaysSelected={setDaysSelected}/>
+                    <CheckBoxDay name="Thursday" setDaysSelected={setDaysSelected}/>
+                    <CheckBoxDay name="Friday" setDaysSelected={setDaysSelected}/>
+                    <CheckBoxDay name="Saturday" setDaysSelected={setDaysSelected}/>
+                    <CheckBoxDay name="Sunday" setDaysSelected={setDaysSelected}/>
+                </div>
+            )}
+        </div>
+    );
+}
+
 // BACKEND FUNCTIONALITIES SHOULD BE ADDED HERE!
 function CreateHabitForm(props) {
     const [clicked, setClicked] = useState(false);
+    const [taskDaysSelected, setTaskDaysSelected] = useState("everyday");
+    const [daysSelected, setDaysSelected] = useState([]);
     // Access the user from the AuthContext
     const user = useContext(AuthContext);
     console.log("Current user in CreateHabitForm:", user ? user.uid : null); // Debugging line
@@ -121,6 +190,13 @@ function CreateHabitForm(props) {
     const [habitType, setHabitType] = useState("Build");
     const [periodSelected, setPeriod] = useState("Day");
     const [color, setColor] = useState("#b9b7b7");
+
+
+    // When users are deciding task days, we need to refresh to 
+    // ensure data type consistency.
+    const refreshDays = () => {
+        setDaysSelected([]);
+    }
 
     const handleAddHabit = async (createdHabit) => {
         if (!user) return;
@@ -165,7 +241,7 @@ function CreateHabitForm(props) {
                     unit: document.getElementById("unit").value,
                     period: periodSelected,
                     taskDays: document.getElementById("task-day").value,
-                    taskDaysSelected: document.getElementById("task-day-value") ? document.getElementById("task-day-value").value : null
+                    daysSelected: daysSelected
                 },
                 reminder: {
                     activated: document.getElementById("reminder-activated").checked,
@@ -281,7 +357,8 @@ function CreateHabitForm(props) {
                     <br />
                     <div id="task-days">
                         <label style={{fontSize: "18px", textAlign: "center"}}>Task Days: </label>
-                        <select name = "task-day" id="task-day" style={{fontSize: "18px", textAlign: "center"}}>
+                        <select name = "task-day" id="task-day" 
+                        style={{fontSize: "18px", textAlign: "center"}} onChange={(e) => setTaskDaysSelected(e.target.value)}>
                             <option value="everyday">Everyday</option>
                             <option value="specific_days">Specific days of the week</option>
                             <option value="number_days">Number of days per week</option>
@@ -289,6 +366,11 @@ function CreateHabitForm(props) {
                             <option value="specific_month_number">Number of days per month</option>
                         </select>
                     </div>
+                    <SelectTaskDays 
+                    mode={taskDaysSelected}
+                    setClicked = {setClicked} 
+                    daysSelected = {daysSelected}
+                    setDaysSelected={setDaysSelected}/>
                 </div>
                 <hr style={{color: "#000000", width: "100%"}}/>
                 {/* Reminder Settings */}
@@ -336,7 +418,7 @@ function CreateHabitForm(props) {
                         </div>
                     </div>
                     <br />
-                    <button type="submit" id="submit-button" disabled={clicked}
+                    <button type="submit" id="submit-button1" disabled={clicked}
                     style={{backgroundColor: "#acacac", 
                     color: "black", fontWeight: "bold"}}>Create Habit</button>
                 </div>

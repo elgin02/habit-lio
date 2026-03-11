@@ -1,0 +1,16 @@
+.calendar {
+  color: rgb(0, 0, 0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30em;
+}
+
+
+.calendar-container{
+    display: flex;
+    justify-content: center;
+    background-color: rgba(255, 255, 255 , 0.75);
+    /* border-radius: 20px; */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
