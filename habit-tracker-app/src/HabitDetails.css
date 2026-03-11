@@ -100,6 +100,9 @@ body {
 }
 
 .details-name {
+    display: flex;
+    align-items: center;
+    text-align: left;
     color: black;
     font-size: 16px;
     font-weight: bold;
@@ -280,6 +283,7 @@ input[type="number"]::-webkit-inner-spin-button {
     align-items: center;
     justify-content: flex-start;
     width: 88%;
+
     gap: 10px;
     text-align: left;
 
@@ -397,18 +401,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     top: -10px;
 }
 
-#habit-popup-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-
-    background: rgba(0, 0, 0, 0.4);
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    z-index: 999;
+#goal-period,
+#goal-value,
+#reminder-option,
+#set-priority,
+#task-days,
+#select-time {
+    font-size: 16px;
 }

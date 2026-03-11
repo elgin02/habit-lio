@@ -192,13 +192,16 @@ function ReminderSettings({ habit, updateHabitField }) {
             {/* Do not put these in a div */}
             <Line isItHidden={!habit.reminderEnabled}/>
             
-            <div id="select-time" hidden={!habit.reminderEnabled}>
-                <span>Select Time:</span>
+      
+            <div id="select-time">
+                <span hidden={!habit.reminderEnabled}>Select Time:</span>
                 <input 
                     type="time" 
                     id="select-time-selector"
+                    hidden={!habit.reminderEnabled}
                 />
             </div>
+        
 
             <Line isItHidden={!habit.reminderEnabled}/>
 
@@ -371,34 +374,4 @@ function HabitDetails({ habit, uid, onClose, loadHabits }) {
     );
 }
 
-function HabitDetailsPopup({habit, uid, loadHabits}) {
-    const [showPopup, setShowPopup] = useState(false);
-
-    return (
-        <div>
-            
-            {/* Temporary way to text popup */}
-            <button onClick={() => setShowPopup(true)}
-                style={{borderRadius: "50%", backgroundColor: "white"}}>
-                <Pencil color='black'/>
-            </button>
-
-            {showPopup && (
-                <div
-                    id="habit-popup-overlay"
-                    onClick={() => setShowPopup(false)}
-                >
-                    <div
-                        id="habit-popup"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <HabitDetails habit={habit} 
-                        uid={uid} loadHabits={loadHabits} onClose={() => setShowPopup(false)}/>
-                    </div>
-                </div>
-            )}
-        </div>
-    );
-}
-
-export default HabitDetailsPopup;
+export default HabitDetails;
