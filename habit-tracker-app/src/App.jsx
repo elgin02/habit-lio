@@ -12,7 +12,6 @@ import {
   listHabits,
   createHabit,
   deleteHabit,
-  exportHabits,
 } from "./firestore";
 import "./App.css";
 import "./Login.css";
@@ -37,7 +36,7 @@ function App() {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Load in the habits for the user, 
+  // Load in the habits for the user,
   // called after login and after edits/deletes to refresh the habit list
   const loadHabits = async (uid) => {
     try {
@@ -173,16 +172,6 @@ function App() {
     }
   };
 
-  const handleExportHabits = async () => {
-    if (!user) return;
-    try {
-      console.log("Attempted export");
-      await exportHabits(user.uid);
-    } catch (error) {
-      console.error("Error exporting habits:", error);
-    }
-  };
-
   const handleGoHome = () => {
     setIsModalOpen(false);
     setNewHabitTitle("");
@@ -262,8 +251,12 @@ function App() {
               <h2 style={{ fontSize: "28px", color: "black" }}>Your Habits</h2>
               {/* <ul> */}
               {habits.map((habit) => (
-                < Habit key={habit.id} 
-                habit={habit} uid={user.id} loadHabits={loadHabits}/>
+                <Habit
+                  key={habit.id}
+                  habit={habit}
+                  uid={user.id}
+                  loadHabits={loadHabits}
+                />
                 // <li key={habit.id}>
                 //     <div>
                 //         <h3>{habit.title}</h3>
@@ -278,11 +271,7 @@ function App() {
                 // </li>
               ))}
               {/* </ul> */}
-              <div>
-                <button onClick={() => handleExportHabits()}>
-                  Export Habits to CSV
-                </button>
-              </div>
+
               <div style={{ padding: "20px" }}>
                 <button onClick={() => setShowPopup(true)}>
                   Habit Analysis

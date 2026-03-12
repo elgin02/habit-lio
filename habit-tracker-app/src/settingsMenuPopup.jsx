@@ -6,6 +6,7 @@ import {
   deleteDoc,
   doc,
 } from "firebase/firestore";
+import { exportHabits } from "./firestore";
 import "./Settings.css";
 
 function SettingsPopup({ closePopup }) {
@@ -50,7 +51,7 @@ function SettingsPopup({ closePopup }) {
 
       if (error.code === "auth/requires-recent-login") {
         alert(
-          "Please sign out and sign in again before deleting your account.",
+          "Failed to delete account. Please sign out and sign in again before deleting your account.",
         );
       } else {
         alert("Failed to delete account. Please try again.");
@@ -58,10 +59,24 @@ function SettingsPopup({ closePopup }) {
     }
   };
 
+  const handleExportHabits = async () => {
+    if (!user) return;
+    try {
+      console.log("Attempted export");
+      await exportHabits(user.uid);
+    } catch (error) {
+      console.error("Error exporting habits:", error);
+    }
+  };
+
   return (
     <div className="settings-popup-overlay" onClick={closePopup}>
       <div className="settings-popup" onClick={(e) => e.stopPropagation()}>
         <h2>Settings</h2>
+
+        <button onClick={() => handleExportHabits()}>
+          Export Habits to CSV
+        </button>
 
         <button
           onClick={async () => {
