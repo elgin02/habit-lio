@@ -3,21 +3,31 @@ import { useContext } from "react";
 import { AuthContext } from "./AuthContext";
 
 import { Pencil } from 'lucide-react';
+import EmojiSelect from './habitComponents/EmojiSelect';
 import './index.css';
 import './HabitDetails.css';
 import {handleSaveHabit, deleteHabit} from "./firestore";
 
 function NameDescription({ habit, updateHabitField }) {
+    const [emoji, setEmoji] = useState(habit.emoji || "📝");
     const colorInputRef = useRef(null);
 
     return (
         <div id="habit-desc">
             <div id="habit-header">
-                <div
-                    id="habit-circle"
+                <div 
+                    
+                    className="habit-circle"
                     style={{ backgroundColor: habit.color ?? "#b9b7b7" }}
                     onClick={() => colorInputRef.current?.click()}
-                />
+                >
+                    <div id="habit-emoji" onClick={(e) => e.stopPropagation() } >
+                        <EmojiSelect
+                            value={habit.emoji}
+                            onChange={(e) => updateHabitField("emoji", e)}
+                        />
+                    </div>
+                </div>
 
                 <input
                     ref={colorInputRef}
@@ -174,43 +184,42 @@ function GoalInfo({ habit, updateGoalField }) {
     );
 }
 
-function ReminderSettings({ habit, updateHabitField }) {
+function ReminderSettings({ habit, updateReminderField }) {
     return (
         <div id="reminder-settings"
-            style={{ minHeight: habit.reminderEnabled ? "160px" : "45px"}}
+            style={{ minHeight: habit.reminder?.activated ? "160px" : "45px"}}
         >
             <div id="reminder-option">
                 <span>Do you want to be reminded?</span>
                 <input
                     type="checkbox"
                     id="reminder-check"
-                    checked={habit.reminderEnabled ?? false}
-                    onChange={(e) => updateHabitField("reminderEnabled", e.target.checked)}
+                    checked={habit.reminder?.activated ?? false}
+                    onChange={(e) => updateReminderField("activated", e.target.checked)}
                 />
             </div>
 
-            {/* Do not put these in a div */}
-            <Line isItHidden={!habit.reminderEnabled}/>
+            <Line isItHidden={!habit.reminder?.activated}/>
             
-      
             <div id="select-time">
-                <span hidden={!habit.reminderEnabled}>Select Time:</span>
+                <span hidden={!habit.reminder?.activated}>Select Time:</span>
                 <input 
                     type="time" 
                     id="select-time-selector"
-                    hidden={!habit.reminderEnabled}
+                    hidden={!habit.reminder?.activated}
+                    value={habit.reminder?.time ?? ""}
+                    onChange={(e) => updateReminderField("time", e.target.value)}
                 />
             </div>
-        
 
-            <Line isItHidden={!habit.reminderEnabled}/>
+            <Line isItHidden={!habit.reminder?.activated}/>
 
             <textarea
                 id="rem-message"
-                hidden={!habit.reminderEnabled}
+                hidden={!habit.reminder?.activated}
                 placeholder="Reminder message here"
-                value={habit.reminderMessage ?? ""}
-                onChange={(e) => updateHabitField("reminderMessage", e.target.value)}
+                value={habit.reminder?.message ?? ""}
+                onChange={(e) => updateReminderField("message", e.target.value)}
             />
         </div>
     );
@@ -302,6 +311,16 @@ function HabitDetails({ habit, uid, onClose, loadHabits }) {
         }));
     }
 
+    function updateReminderField(field, value) {
+        setEditedHabit(prev => ({
+            ...prev,
+            reminder: {
+                ...prev.reminder,
+                [field]: value
+            }
+        }));
+    }
+
     async function handleSave() {
         try {
             await handleSaveHabit(user, editedHabit);
@@ -354,7 +373,7 @@ function HabitDetails({ habit, uid, onClose, loadHabits }) {
             <span className="details-name">Reminder Settings</span>
             <ReminderSettings
                 habit={editedHabit}
-                updateHabitField={updateHabitField}
+                updateReminderField={updateReminderField}
             />
 
             <span className="details-name">Priority</span>

@@ -15,9 +15,8 @@ body {
 
     width: auto;
     height: auto;
-    max-width: 360px;
     max-height: 620px;
-    min-width: 300px;
+    min-width: 360px;
     min-height: 580px;
 
     overflow: auto;
@@ -71,14 +70,27 @@ body {
     text-overflow: ellipsis;
 }
 
-#habit-circle {
+.habit-circle {
     /* border: 5px solid black; */
-    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border-radius: 50%;
-    width: 2.3em;
-    height: 2.3em;
+    width: 3.5em;
+    height: 3.5em;
     right: 10px;
     flex-shrink: 0;
+
+    cursor: pointer;
+}
+
+#habit-emoji {
+    border: none;
+    outline: none;
+    border-radius: 50%;
+    background-color: transparent;
+    width: 2.5em;
+    height: 2.5em;
 
     cursor: pointer;
 }

@@ -74,8 +74,13 @@ export const handleSaveHabit = async (user, updatedHabit) => {
       name: updatedHabit.name,
       description: updatedHabit.description || "",
       color: updatedHabit.color || "#000000",
+      emoji: updatedHabit.emoji || "📝",
       type: updatedHabit.type || "General",
       goal: updatedHabit.goal || { value: 1, unit: "minute" },
+      reminder: updatedHabit.reminder || {activated: false, time: "", message: ""},
+      priority: updatedHabit.priority || "none",
+      startDate: updatedHabit.startDate || null,
+      endDate: updatedHabit.endDate || null,
       taskDays: updatedHabit.taskDays || "Everyday",
       isActive: updatedHabit.isActive ?? true,
       // Preserve streak data
