@@ -14,6 +14,23 @@
     box-shadow: 0px 0px 5px 1px rgba(255, 255, 255, 0.75);
 }
 
+.habit-checkbox {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    margin-left: 10px;
+    flex-shrink: 0;
+}
+
+.habit-checkbox:checked {
+    accent-color: #4CAF50;
+}
+
+.habit-checkbox:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
 .habit-info{
     display: flex;
     flex-direction: column;

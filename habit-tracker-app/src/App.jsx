@@ -260,7 +260,7 @@ function App() {
               {/* <ul> */}
               {habits.map((habit) => (
                 < Habit key={habit.id} 
-                habit={habit} uid={user.id}
+                habit={habit} uid={user.uid}
                  loadHabits={loadHabits}
                  onEdit={() => setSelectedHabit(habit)}/>
                 // <li key={habit.id}>
