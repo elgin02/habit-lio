@@ -7,3 +7,40 @@ chrome.action.onClicked.addListener((tab) => {
   if (!tab?.id) return;
   chrome.sidePanel.open({ tabId: tab.id });
 });
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message?.type === "notify") {
+    let title = "Habit.lio";
+    let icon = chrome.runtime.getURL("icons/Habitlio-Icon48.png");
+
+    if (message.reason === "habitCreation") {
+      // Show a notification when a habit is created successfully
+      const chosenTitle = ["Congratulations🔥", "What a Beast🤩🤩", "Congrats😎"];
+      title = chosenTitle[Math.floor(Math.random() * chosenTitle.length)];
+      icon = chrome.runtime.getURL("icons/Habitlio-Icon128.png");
+    }
+
+    chrome.notifications.create({
+      type: "basic",
+      iconUrl: icon,
+      title: title,
+      message: message.message,
+      priority: 1
+    });
+
+    sendResponse({ status: "success" });
+    return true;
+  }
+});
+
+// reminder listener
+chrome.alarms.onAlarm.addListener((alarm) => {
+  console.log("Alarm received:", alarm.name);
+  chrome.notifications.create({
+    type: "basic",
+    iconUrl: chrome.runtime.getURL("icons/Habitlio-Icon48.png"),
+    title: "Habit Reminder!",
+    message: `Time to work on: ${alarm.name}`, // I am unsure how to use the custom message here on reminder creation
+    priority: 2
+  });
+});
