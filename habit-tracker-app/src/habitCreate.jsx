@@ -296,6 +296,24 @@ function CreateHabitForm(props) {
                 isActive: true
                 };
 
+                if (createdHabit.reminder.activated && createdHabit.reminder.time) {
+                    const [hours, minutes] = createdHabit.reminder.time.split(':');
+                    const now = new Date();
+                    const alarmTime = new Date();
+                    alarmTime.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+
+                    // If time already passed today, set for tomorrow
+                    if (alarmTime <= now) {
+                        alarmTime.setDate(now.getDate() + 1);
+                    }
+
+                    // Schedule repeating alarm every 24 hours
+                    chrome.alarms.create(createdHabit.name, {
+                        when: alarmTime.getTime(),
+                        periodInMinutes: 1440
+                    });
+                }
+
                 await handleAddHabit(createdHabit);
                 chrome.runtime.sendMessage({ type: "notify", 
                     reason: "habitCreation", 
