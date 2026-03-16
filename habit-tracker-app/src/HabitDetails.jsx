@@ -337,7 +337,7 @@ function HabitDetails({ habit, uid, onClose, loadHabits }) {
     async function handleDelete() {
         // Implement delete functionality here, similar to handleSave but calling a delete function from firestore.js
         try {
-            await deleteHabit(user.uid, editedHabit.id);
+            await deleteHabit(user.uid, editedHabit);
             onClose();
             if (loadHabits) {
                 await loadHabits(user.uid);

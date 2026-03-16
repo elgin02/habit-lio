@@ -58,6 +58,26 @@ export const createHabit = async (uid, habit) => {
   };
 
   const docRef = await addDoc(habitsRef, habitDoc);
+  if (habit.reminder?.activated) {
+    const [hours, minutes] = habit.reminder.time.split(':');
+    const now = new Date();
+    const alarmTime = new Date();
+    alarmTime.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+
+    // If time already passed today, set for tomorrow
+    if (alarmTime <= now) {
+        alarmTime.setDate(now.getDate() + 1);
+    }
+
+    const stringifyName = docRef.id + "|" + habit.reminder.message 
+    + "|" + habit.name; // Combine message and habit name for later use
+    // Schedule repeating alarm every 24 hours
+    // Switch back to createdHabit.name if it doesn't work
+    chrome.alarms.create(stringifyName, {
+        when: alarmTime.getTime(),
+        periodInMinutes: 1440 // 24 hours
+    });
+  }
   return docRef;
 };
 
@@ -121,8 +141,10 @@ export const updateHabit = async (uid, habitId, updates) => {
   });
 };
 
-export const deleteHabit = async (uid, habitId) => {
-  const habitRef = doc(db, "users", uid, "habits", habitId);
+export const deleteHabit = async (uid, habit) => {
+  const habitRef = doc(db, "users", uid, "habits", habit.id);
+  const stringifyName = habit.id + "|" + habit.reminder.message + "|" + habit.name; // Combine message and habit name for later use
+  chrome.alarms.clear(stringifyName); // Clear any associated alarms
   await deleteDoc(habitRef);
 };
 

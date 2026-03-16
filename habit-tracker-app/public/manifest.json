@@ -9,7 +9,8 @@
     "sidePanel",
     "downloads",
     "notifications",
-    "alarms"
+    "alarms",
+    "storage"
   ],
   "oauth2": {
     "client_id": "1018917693213-2018mdae8clgo0i0h720hloasfadb4m5.apps.googleusercontent.com",

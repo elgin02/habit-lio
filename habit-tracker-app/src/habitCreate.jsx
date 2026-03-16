@@ -230,6 +230,8 @@ function CreateHabitForm(props) {
     const [habitType, setHabitType] = useState("Build");
     const [periodSelected, setPeriod] = useState("Day");
     const [color, setColor] = useState("#b9b7b7");
+    const [reminder, setReminder] = useState(false);
+    const [remindTime, setRemindTime] = useState("");
 
 
     // When users are deciding task days, we need to refresh to 
@@ -286,8 +288,8 @@ function CreateHabitForm(props) {
                     numOfDays: numOfDays
                 },
                 reminder: {
-                    activated: document.getElementById("reminder-activated").checked,
-                    time: document.getElementById("reminder-time").value,
+                    activated: reminder,
+                    time: remindTime,
                     message: document.getElementById("reminder-message").value
                 },
                 priority: document.getElementById("priority1").value,
@@ -296,25 +298,12 @@ function CreateHabitForm(props) {
                 isActive: true
                 };
 
-                if (createdHabit.reminder.activated && createdHabit.reminder.time) {
-                    const [hours, minutes] = createdHabit.reminder.time.split(':');
-                    const now = new Date();
-                    const alarmTime = new Date();
-                    alarmTime.setHours(parseInt(hours), parseInt(minutes), 0, 0);
-
-                    // If time already passed today, set for tomorrow
-                    if (alarmTime <= now) {
-                        alarmTime.setDate(now.getDate() + 1);
-                    }
-
-                    // Schedule repeating alarm every 24 hours
-                    chrome.alarms.create(createdHabit.name, {
-                        when: alarmTime.getTime(),
-                        periodInMinutes: 1440
-                    });
-                }
-
-                await handleAddHabit(createdHabit);
+                // if (reminder && remindTime) {
+                    
+                // }
+                
+                handleAddHabit(createdHabit);
+                // await handleAddHabit(createdHabit);
                 chrome.runtime.sendMessage({ type: "notify", 
                     reason: "habitCreation", 
                     message: `You have successfully created the habit: ${createdHabit.name}!`});
@@ -446,11 +435,13 @@ function CreateHabitForm(props) {
                         <label htmlFor="reminder-activated" style={{fontSize: "18px", textAlign: "center"}}>Want to be reminded? </label>
                         <input type="checkbox" id="reminder-activated" name="reminder-activated" style={{fontSize: "18px"}} onChange={(e) => {
                             document.getElementById("yes-reminder").hidden = !e.target.checked;
+                            setReminder(e.target.checked);
                         }}></input>
                         <br />
                         <div id="yes-reminder" hidden={true}>
                             <label htmlFor="reminder-time" style={{fontSize: "18px", textAlign: "center"}}>Select Time: </label>
-                            <input type="time" id="reminder-time" name="reminder-time" style={{fontSize: "18px", textAlign: "center"}}>
+                            <input type="time" id="reminder-time" name="reminder-time" 
+                            style={{fontSize: "18px", textAlign: "center"}} onChange={(e) => setRemindTime(e.target.value)}>
                             </input>
                             <br />
                             <br />
