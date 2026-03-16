@@ -15,27 +15,42 @@ function NameDescription({ habit, updateHabitField }) {
     return (
         <div id="habit-desc">
             <div id="habit-header">
-                <div 
-                    
-                    className="habit-circle"
-                    style={{ backgroundColor: habit.color ?? "#b9b7b7" }}
-                    onClick={() => colorInputRef.current?.click()}
-                >
-                    <div id="habit-emoji" onClick={(e) => e.stopPropagation() } >
-                        <EmojiSelect
-                            value={habit.emoji}
-                            onChange={(e) => updateHabitField("emoji", e)}
-                        />
+                <div id="emoji-color-container">
+                    <div 
+                        className="habit-circle"
+                        style={{ backgroundColor: habit.color ?? "#b9b7b7" }}
+                        onClick={() => colorInputRef.current?.click()}
+                    >
+                        <div id="habit-emoji" onClick={(e) => e.stopPropagation() } >
+                            <EmojiSelect
+                                value={habit.emoji}
+                                onChange={(e) => updateHabitField("emoji", e)}
+                            />
+                        </div>
                     </div>
+                    <label htmlFor="color-picker">Set Color: </label>
+                    <select name="color-picker" id="color-picker"
+                    ref={colorInputRef}
+                    value={habit.color ?? "#b9b7b7"} 
+                    onChange={(e) => updateHabitField("color", e.target.value)}>
+                        <option value="#b9b7b7">Default</option>
+                        <option value="#f8aaaa">Red</option>
+                        <option value="#aaffaa">Green</option>
+                        <option value="#aaaaff">Blue</option>
+                        <option value="#ffffaa">Yellow</option>
+                        <option value="#ffb6c1">Pink</option>
+                        <option value="#ffa500">Orange</option>
+                        <option value="#800080">Purple</option>
+                    </select>
                 </div>
 
-                <input
+                {/* <input
                     ref={colorInputRef}
                     type="color"
                     value={habit.color ?? "#b9b7b7"}
                     onChange={(e) => updateHabitField("color", e.target.value)}
                     style={{ display: "none" }}
-                />
+                /> */}
 
                 <input
                     type="text"

@@ -90,6 +90,9 @@ export const handleSaveHabit = async (user, updatedHabit) => {
     console.log("updatedHabit.id:", updatedHabit.id);
     const habitRef = doc(db, "users", user.uid, "habits", updatedHabit.id);
 
+    const stringifyName = updatedHabit.id + "|" + updatedHabit.reminder.message + "|" + updatedHabit.name; // Combine message and habit name for later use
+    chrome.alarms.clear(stringifyName); // Clear any associated alarms
+
     await updateDoc(habitRef, {
       name: updatedHabit.name,
       description: updatedHabit.description || "",
@@ -108,6 +111,28 @@ export const handleSaveHabit = async (user, updatedHabit) => {
       completions: updatedHabit.completions ?? [],
       lastCompletedDate: updatedHabit.lastCompletedDate ?? null,
     });
+
+    if (updatedHabit.reminder?.activated) {
+      const [hours, minutes] = updatedHabit.reminder.time.split(':');
+      const now = new Date();
+      const alarmTime = new Date();
+      alarmTime.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+
+      // If time already passed today, set for tomorrow
+      if (alarmTime <= now) {
+          alarmTime.setDate(now.getDate() + 1);
+      }
+
+      const stringifyName = habitRef.id + "|" + updatedHabit.reminder.message 
+      + "|" + updatedHabit.name; // Combine message and habit name for later use
+      // Schedule repeating alarm every 24 hours
+      // Switch back to createdHabit.name if it doesn't work
+      chrome.alarms.create(stringifyName, {
+          when: alarmTime.getTime(),
+          periodInMinutes: 1440 // 24 hours
+      });
+    }
+    
 
     // setHabits((prev) =>
     //   prev.map((habit) =>
