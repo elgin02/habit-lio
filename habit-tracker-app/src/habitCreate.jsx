@@ -5,7 +5,7 @@ import { AuthContext } from "./AuthContext";
 import { createUserProfile, listHabits, createHabit, 
     deleteHabit, exportHabits } from "./firestore";
 import './habit-creation.css'
-import Calendar from './habitComponents/calendar';
+import Calendar from './habitComponents/Calendar';
 import EmojiSelect from './habitComponents/EmojiSelect';
 
 import { X, Flame, Activity, Volleyball, HouseHeart, GraduationCap, Plus, ChevronLeft, CirclePlus, DockIcon} from 'lucide-react'
@@ -284,7 +284,9 @@ function CreateHabitForm(props) {
                     unit: document.getElementById("unit").value,
                     period: periodSelected,
                     taskDays: document.getElementById("task-day").value,
+                    // Days Selected are the days selected out of a week or month
                     daysSelected: daysSelected,
+                    // Number of days selected out of a week or month.
                     numOfDays: numOfDays
                 },
                 reminder: {

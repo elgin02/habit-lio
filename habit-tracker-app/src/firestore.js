@@ -104,7 +104,6 @@ export const handleSaveHabit = async (user, updatedHabit) => {
       priority: updatedHabit.priority || "none",
       startDate: updatedHabit.startDate || null,
       endDate: updatedHabit.endDate || null,
-      taskDays: updatedHabit.taskDays || "Everyday",
       isActive: updatedHabit.isActive ?? true,
       // Preserve streak data
       streak: updatedHabit.streak ?? 0,

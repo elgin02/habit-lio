@@ -6,6 +6,8 @@ import { Pencil } from 'lucide-react';
 import EmojiSelect from './habitComponents/EmojiSelect';
 import './index.css';
 import './HabitDetails.css';
+import CalendarEdit from "./habitComponents/calendarEdit";
+
 import {handleSaveHabit, deleteHabit} from "./firestore";
 
 function NameDescription({ habit, updateHabitField }) {
@@ -129,7 +131,131 @@ function HabitType({ habit, updateHabitField }) {
     );
 }
 
+function CheckBoxDay({ name, setDaysSelected, daysSelected, updateGoalField }) {
+    // Start checked by default
+    const [checked, setChecked] = useState(daysSelected.includes(name));
+
+    const handleToggle = () => {
+        const nextCheckedState = !checked;
+        setChecked(nextCheckedState);
+
+        if (nextCheckedState) {
+            // Logic to ADD to the array (assuming setDaysSelected is an array setter)
+            setDaysSelected(prev => [...prev, name]);
+            updateGoalField("daysSelected", [...daysSelected, name]);
+        } else {
+            // Logic to REMOVE from the array
+            setDaysSelected(prev => prev.filter(day => day !== name));
+            updateGoalField("daysSelected", daysSelected.filter(day => day !== name));
+        }
+    };
+
+    return (
+        <div style={{ fontSize: "14px" }}>
+            <input 
+                type="checkbox"
+                id={name}
+                name={name}
+                checked={checked}
+                // FIXED: Wrapped in an arrow function so it only runs on click
+                onChange={() => handleToggle()} 
+            />
+            <label htmlFor={name}>{name}</label>
+        </div>
+    );
+}
+
+// This component handles the selection of task days 
+// based on the selected mode in the goal info section of habit details. 
+// It conditionally renders different UI elements for selecting specific days of the week, 
+// specific days of the month, or entering a number of days per week/month.
+function SelectTaskDays({mode, setClicked, 
+    daysSelected, setDaysSelected, setNumOfDays, updateGoalField}) {
+    // const [error, showError] = useState(false);
+    const isError = daysSelected.length === 0;
+    setClicked(mode === "specific_days" && isError);
+    // Ensure days selected is refresh.
+    // const refreshNeeded = mode === "specific_month_days" && daysSelected.length > 0;
+    // setDaysSelected(refreshNeeded ? [] : daysSelected);
+    console.log("DAYS:" + daysSelected);
+    return(
+        <div>
+            {mode === "specific_month_days" && (
+                <div id="task-days-select">
+                    <CalendarEdit daysSelected={daysSelected} 
+                    setDaysSelected={setDaysSelected}
+                    updateGoalField={updateGoalField}/>
+                </div>
+            )}
+            {mode === "specific_days" && (
+                <div>
+                    <p id="days-error" 
+                    style={{color: "red", fontSize: "14px"}} hidden={!isError}>
+                        Error: Please select at least one day.
+                    </p>
+                    <label htmlFor='specific-days' style={{fontSize: "16px"}}>
+                        Choose Day(s) to accomplish the habit: </label>
+                    <CheckBoxDay name="Monday" 
+                    setDaysSelected={setDaysSelected} 
+                    daysSelected={daysSelected} updateGoalField={updateGoalField}/>
+
+                    <CheckBoxDay name="Tuesday" setDaysSelected={setDaysSelected} 
+                    daysSelected={daysSelected} updateGoalField={updateGoalField}/>
+
+                    <CheckBoxDay name="Wednesday" setDaysSelected={setDaysSelected} 
+                    daysSelected={daysSelected} updateGoalField={updateGoalField}/>
+
+                    <CheckBoxDay name="Thursday" setDaysSelected={setDaysSelected} 
+                    daysSelected={daysSelected} updateGoalField={updateGoalField}/>
+
+                    <CheckBoxDay name="Friday" setDaysSelected={setDaysSelected} 
+                    daysSelected={daysSelected} updateGoalField={updateGoalField}/>
+
+                    <CheckBoxDay name="Saturday" setDaysSelected={setDaysSelected} 
+                    daysSelected={daysSelected} updateGoalField={updateGoalField}/>
+
+                    <CheckBoxDay name="Sunday" setDaysSelected={setDaysSelected} 
+                    daysSelected={daysSelected} updateGoalField={updateGoalField}/>
+                </div>
+            )}
+            {mode === "number_days" && (
+                <div>
+                    <label htmlFor='number-days' style={{fontSize: "16px"}}>
+                        Enter the number of days per week you want to accomplish this habit:
+                    </label>
+                    <input type="number" id="number-days" min="1" max="7" onChange={(e) => setNumOfDays(parseInt(e.target.value) || 1)} />
+                </div>
+            )}
+            {mode === "specific_month_number" && (
+                <div>
+                    <label htmlFor='number-month-days' style={{fontSize: "16px"}}>
+                        Enter the number of days per month you want to accomplish this habit:
+                    </label>
+                    <input type="number" id="number-month-days" min="1" max="31" onChange={(e) => setNumOfDays(parseInt(e.target.value) || 1)} />
+                </div>
+            )}
+        </div>
+    );
+}
+
 function GoalInfo({ habit, updateGoalField }) {
+    const [clicked, setClicked] = useState(false);
+    const [taskDaysSelected, setTaskDaysSelected] 
+    = useState(habit.goal?.taskDays ?? "everyday");
+    const [daysSelected, setDaysSelected] = useState(habit.goal?.daysSelected ?? []);
+    const [numOfDays, setNumOfDays] = useState(habit.goal?.numOfDays ?? 1);
+
+    const firstItem = daysSelected[0];
+
+    // only convert if the dates are timestamps.
+    if (firstItem && typeof firstItem === 'object' && 'seconds' in firstItem) {
+        const formattedDates = habit.goal?.daysSelected?.map(timestamp => timestamp.toDate());
+        setDaysSelected(formattedDates);
+    }
+    console.log("GOAL INFO HABIT:", habit);
+    console.log("GOAL INFO TASK DAYS SELECTED:", taskDaysSelected);
+    console.log("GOAL INFO DAYS SELECTED:", daysSelected);
+    console.log("GOAL INFO NUM OF DAYS:", numOfDays);
     return (
         <div id="goal-info">
             <div id="goal-period">
@@ -186,7 +312,8 @@ function GoalInfo({ habit, updateGoalField }) {
                     id="task-day"
                     style={{ fontSize: "18px", textAlign: "left" }}
                     value={habit.goal?.taskDays ?? "everyday"}
-                    onChange={(e) => updateGoalField("taskDays", e.target.value)}
+                    onChange={(e) => {updateGoalField("taskDays", e.target.value); 
+                        setTaskDaysSelected(e.target.value);}}
                 >
                     <option value="everyday">Everyday</option>
                     <option value="specific_days">Specific days of the week</option>
@@ -195,9 +322,19 @@ function GoalInfo({ habit, updateGoalField }) {
                     <option value="specific_month_number">Number of days per month</option>
                 </select>
             </div>
+            <div id="Select-task-days">
+            <SelectTaskDays 
+                    mode={taskDaysSelected}
+                    setClicked = {setClicked} 
+                    daysSelected = {daysSelected}
+                    setDaysSelected={setDaysSelected}
+                    setNumOfDays={setNumOfDays}
+                    updateGoalField = {updateGoalField}/>
+            </div>
         </div>
     );
 }
+
 
 function ReminderSettings({ habit, updateReminderField }) {
     return (

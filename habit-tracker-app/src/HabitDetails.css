@@ -198,9 +198,9 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 
-#goal-info {
-    min-height: 190px;
-}
+/*#goal-info {
+    min-height: 190px; 
+}*/
 
 
 #goal-period {   
@@ -428,4 +428,20 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 #task-days,
 #select-time {
     font-size: 16px;
+}
+
+#task-days-select{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: transparent;
+}
+
+#Select-task-days{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 88%;
 }
