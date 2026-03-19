@@ -5,7 +5,13 @@ service cloud.firestore {
       allow read, write, delete: if request.auth != null && request.auth.uid == userId;
 
       match /habits/{habitId} {
-        allow read, write, delete: if request.auth != null && request.auth.uid == userId;
+        // Allow read and delete for authenticated user
+        allow read, delete: if request.auth != null && request.auth.uid == userId;
+        
+        // Allow write but restrict which fields can be written
+        allow write: if request.auth != null && request.auth.uid == userId &&
+          // Block direct writes to streak and lastCompletedDate (computed server-side)
+          !request.resource.data.keys().hasAny(['streak', 'lastCompletedDate']);
       }
     }
   }

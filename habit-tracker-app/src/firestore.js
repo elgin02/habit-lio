@@ -240,7 +240,7 @@ export const calculateStreak = (completions) => {
       streak++;
       prevDate = current;
     } else {
-      break; // Gap found, streak ends
+      break;
     }
   }
 
@@ -271,17 +271,15 @@ export const toggleHabitCompletion = async (uid, habitId) => {
     isCompleted = true;
   }
   
-  const newStreak = calculateStreak(updatedCompletions);
-  
-  // Update habit document
+  // Only write completions; streak is calculated server-side by Cloud Function
   await updateDoc(habitRef, {
     completions: updatedCompletions,
-    streak: newStreak,
-    lastCompletedDate: isCompleted ? today : (updatedCompletions.length > 0 ? updatedCompletions[updatedCompletions.length - 1] : null),
     updatedAt: serverTimestamp()
   });
   
-  return { isCompleted, streak: newStreak };
+  const localStreak = calculateStreak(updatedCompletions);
+  
+  return { isCompleted, streak: localStreak };
 };
 
 export const isHabitCompletedToday = (habit) => {
