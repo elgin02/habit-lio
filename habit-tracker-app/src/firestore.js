@@ -348,3 +348,17 @@ export const isHabitCompletedToday = (habit) => {
   const today = getTodayDate();
   return habit.completions?.includes(today) ?? false;
 };
+
+// retrieves user badges
+export const getEarnedBadges = async (uid) => {
+  const userRef = doc(db, "users", uid);
+  const snapshot = await getDoc(userRef);
+  if (!snapshot.exists()) return [];
+  return snapshot.data().earnedBadges ?? [];
+};
+
+// saves badges to firestore
+export const saveEarnedBadges = async (uid, earnedIds) => {
+  const userRef = doc(db, "users", uid);
+  await updateDoc(userRef, { earnedBadges: earnedIds });
+};

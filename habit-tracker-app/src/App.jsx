@@ -198,6 +198,8 @@ function App() {
               onHomeClick={handleGoHome}
               onAddClick={() => setIsModalOpen(true)}
               addHabit={addHabit}
+              uid={user.uid}
+              habits={habits}
             />
             <p>
               Welcome, <strong>{user.email}</strong>!
