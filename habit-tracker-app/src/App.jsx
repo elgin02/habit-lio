@@ -265,18 +265,6 @@ function App() {
                 habit={habit} uid={user.uid}
                  loadHabits={loadHabits}
                  onEdit={() => setSelectedHabit(habit)}/>
-                // <li key={habit.id}>
-                //     <div>
-                //         <h3>{habit.title}</h3>
-                //         {habit.description && <p>{habit.description}</p>}
-                //         <span>{habit.frequency}</span>
-                //     </div>
-                //     <button
-                //         onClick={() => handleDeleteHabit(habit.id)}
-                //     >
-                //         Delete
-                //     </button>
-                // </li>
               ))}
               {/* </ul> */}
 
