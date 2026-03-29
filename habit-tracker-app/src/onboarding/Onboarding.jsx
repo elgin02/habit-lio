@@ -3,12 +3,13 @@ import OnboardingPopup from "./OnboardingPopup.jsx";
 // import "../App.css";
 
 
-function Onboarding() {
+function Onboarding(props) {
     // const [showPopup, setShowPopup] = useState(false);
+    console.log("props: ", props);
 
     return(
         <div>
-            <OnboardingPopup />
+            <OnboardingPopup props={props}/>
         </div>
     )
 }

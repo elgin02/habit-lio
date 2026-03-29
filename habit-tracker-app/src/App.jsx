@@ -12,6 +12,7 @@ import {
   listHabits,
   createHabit,
   deleteHabit,
+  getOnboardingStatus
 } from "./firestore";
 import "./App.css";
 import "./Login.css";
@@ -24,6 +25,7 @@ import NewHabitForm from "./habitAnalysis";
 import Habit from "./habitComponents/habit";
 import HabitDetails from "./HabitDetails";
 import { AuthContext } from "./AuthContext";
+import Onboarding from "./onboarding/Onboarding.jsx";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -59,7 +61,17 @@ function App() {
         setHabits([]);
       }
     });
-    return () => unsubscribe();
+
+    const checkOnboardingStatus = async (user) => {
+      try {
+        const alreadyOnboarded = await getOnboardingStatus(user.uid);
+        setAlreadyOnboarded(alreadyOnboarded);
+      } catch (error) {
+        console.error("Error checking onboarding status:", error);
+      }
+    };
+
+    return () => {unsubscribe(); checkOnboardingStatus(user);};
   }, []);
 
   const handleGoogleAuth = () => {
@@ -170,8 +182,8 @@ function App() {
     <AuthContext.Provider value={user}>
       <div className="card">
         {user ? (
-          // Check if user is onboarded, if not show onboarding popup
           <div>
+              <Onboarding hidden={alreadyOnboarded} />
             { selectedHabit ? (<HabitDetails
                 habit={selectedHabit}
                 uid={user.uid}
@@ -190,57 +202,6 @@ function App() {
               Welcome, <strong>{user.email}</strong>!
             </p>
             
-
-            {/* Modal for habit adding */}
-            {isModalOpen && (
-              <div className="modal-overlay">
-                <div className="modal-content">
-                  <h3>Add a New Habit</h3>
-
-                  <section>
-                    <h4>Quick Add:</h4>
-                    <div className="standard-habits-grid">
-                      {standardHabits.map((habit) => (
-                        <button
-                          key={habit}
-                          onClick={() => {
-                            handleAddStandardHabit(habit);
-                          }}
-                          className="standard-habit-btn"
-                        >
-                          {habit}
-                        </button>
-                      ))}
-                    </div>
-                  </section>
-
-                  <hr />
-
-                  <section>
-                    <h4>Create Custom Habit:</h4>
-                    <input
-                      type="text"
-                      value={newHabitTitle}
-                      onChange={(e) => setNewHabitTitle(e.target.value)}
-                      onKeyPress={(e) => e.key === "Enter" && handleAddHabit()}
-                      placeholder="Enter a new habit..."
-                      disabled={loading}
-                    />
-                    <div className="modal-actions">
-                      <button onClick={handleAddHabit} disabled={loading}>
-                        {loading ? "Adding..." : "Add Habit"}
-                      </button>
-                      <button
-                        onClick={() => setIsModalOpen(false)}
-                        className="cancel-btn"
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  </section>
-                </div>
-              </div>
-            )}
             <div>
               {/* // Display habits */}
               <h2 style={{ fontSize: "28px", color: "black" }}>Your Habits</h2>

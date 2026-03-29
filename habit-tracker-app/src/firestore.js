@@ -148,15 +148,6 @@ export const handleSaveHabit = async (user, updatedHabit) => {
       });
     }
     
-
-    // setHabits((prev) =>
-    //   prev.map((habit) =>
-    //     habit.id === updatedHabit.id ? updatedHabit : habit
-    //   )
-    // );
-
-    // setShowEditPopup(false);
-    // setEditingHabit(null);
   } catch (error) {
     console.error("Failed to update habit:", error);
   }
@@ -362,3 +353,17 @@ export const saveEarnedBadges = async (uid, earnedIds) => {
   const userRef = doc(db, "users", uid);
   await updateDoc(userRef, { earnedBadges: earnedIds });
 };
+
+// Retrieves user onboarding status
+export const getOnboardingStatus = async (uid) => {
+  const userRef = doc(db, "users", uid);
+  const snapshot = await getDoc(userRef);
+  if (!snapshot.exists()) return false;
+  return snapshot.data().alreadyOnboarded ?? false;
+}
+
+// Saves user onboarding status to firestore
+export const saveOnboardingStatus = async (uid, status) => {
+  const userRef = doc(db, "users", uid);
+  await updateDoc(userRef, { alreadyOnboarded: status });
+}
