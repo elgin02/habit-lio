@@ -1,0 +1,1 @@
+border-radius:50% -- modifies the corner shape. You can get a circle from this.

@@ -55,6 +55,30 @@ function Page2({currentPage, setCurrentPage, setUserInfo}){
     )
 }
 
+function Page3({currentPage, setCurrentPage}){
+    const [pageName, setPageName] = useState("Page3");
+    console.log("current page should be 3: ", currentPage !== pageName);
+    var fileInputRef = document.getElementById("profile-picture");
+    // Erase the file selected if users decide to click "upload file after uploading"
+    
+
+    return(
+        <div className="onboarding-wrapper" hidden = {currentPage !== pageName}>
+        <div className = "onboarding-content">
+            <h1>Add a Profile Picture (Optional)</h1>
+            <p>Upload a profile picture to personalize your experience.</p>
+            <p>Let the world know who you are!!</p>
+            <label htmlFor="profile-picture">Upload Profile Picture</label>
+            <input type="file" id="profile-picture" name="profile-picture" accept="image/*" />
+            <br />
+            <button className="continue-btn"
+            onClick={() => setCurrentPage("Page4")} >Continue</button>
+        </div>
+        </div>
+    )
+}
+
+
 function OnboardingPopup(props) {
     const [userInfo, setUserInfo] = useState({
         firstName: "",
@@ -107,6 +131,9 @@ function OnboardingPopup(props) {
                     < Page2 currentPage={currentPage} 
                     setCurrentPage={setCurrentPage} 
                     setUserInfo={setUserInfo} />
+
+                    < Page3 currentPage={currentPage} 
+                    setCurrentPage={setCurrentPage} />
                 </div>
             </div>
         </div>
