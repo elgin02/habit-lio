@@ -1,5 +1,6 @@
-import { House, Users, Settings, Mail, Medal } from "lucide-react";
+import { House, Users, Settings, Mail, Medal, CircleUser } from "lucide-react";
 import "./App.css";
+import Profile from "./Profile.jsx";
 import HabitCreate from "./habitCreate";
 import { useState } from "react";
 import SettingsPopup from "./Settings.jsx";
@@ -8,6 +9,7 @@ import Badges from "./Badges.jsx";
 function Menu({ onHomeClick, addHabit, setShowFriendsPage, uid, habits }) {
   const [showSettings, setShowSettings] = useState(false);
   const [showBadges, setShowBadges] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
   return (
     <>
       <div id="menu">
@@ -23,7 +25,10 @@ function Menu({ onHomeClick, addHabit, setShowFriendsPage, uid, habits }) {
           {" "}
           <House color="black" />{" "}
         </button>{" "}
-        <span className="divider"></span>{" "}
+        <span className="divider"></span>
+        <HabitCreate
+          addHabit={addHabit}
+        /> <span className="divider"></span>{" "}
         <button
           id="badges-btn"
           title="Badges"
@@ -33,7 +38,15 @@ function Menu({ onHomeClick, addHabit, setShowFriendsPage, uid, habits }) {
         </button>
         <span className="divider" />
         <button
-          id="users-btn"
+          id="profile-btn"
+          title="Profile"
+          onClick={() => setShowProfile(true)}
+        >
+          <CircleUser color="black" />
+        </button>
+        <span className="divider" />
+        <button
+          id="friends-btn"
           title="Friends"
           onClick={() => setShowFriendsPage(true)}
         >
@@ -41,9 +54,6 @@ function Menu({ onHomeClick, addHabit, setShowFriendsPage, uid, habits }) {
           <Users color="black" />{" "}
         </button>{" "}
         <span className="divider"></span>
-        <HabitCreate
-          addHabit={addHabit}
-        /> <span className="divider"></span>{" "}
         <button id="mail-btn" title="Messages">
           {" "}
           <Mail color="black" />{" "}
@@ -61,6 +71,10 @@ function Menu({ onHomeClick, addHabit, setShowFriendsPage, uid, habits }) {
 
       {showSettings && (
         <SettingsPopup closePopup={() => setShowSettings(false)} />
+      )}
+
+      {showProfile && (
+        <Profile uid={uid} onClose={() => setShowProfile(false)} />
       )}
 
       {showBadges && (

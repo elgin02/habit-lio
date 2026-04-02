@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { BADGES, checkBadges } from "./badgeDefinitions";
 import { getEarnedBadges, saveEarnedBadges } from "./firestore";
-import { X } from "lucide-react";
 import "./Badges.css";
 
 const CATEGORIES = [
