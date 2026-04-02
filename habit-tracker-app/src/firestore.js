@@ -12,7 +12,9 @@ import {
   addDoc
 } from "firebase/firestore";
 
-import { db } from "./firebase";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+
+import { db, storage } from "./firebase";
 
 export const createUserProfile = async (uid, { email, displayName }) => {
   const userRef = doc(db, "users", uid);
@@ -377,16 +379,18 @@ export const saveUserInfo = async (uid, userInfo) => {
 export const getUserInfo = async (uid, specificItem) => {
   const userRef = doc(db, "users", uid);
   const snapshot = await getDoc(userRef);
+  
   if (!snapshot.exists()) return null;
+  
   const userInfo = snapshot.data().userInfo;
-  if (specificItem === "username") {
-    if(userInfo["greetUsername"]){
-      return userInfo[specificItem];
-    } else{
-      return "";
-    }
+
+  // Check if the specific key exists in the userInfo object
+  if (specificItem in userInfo) {
+    return userInfo[specificItem];
   }
-  return specificItem ? userInfo[specificItem] : userInfo;
+
+  // Fallback if the key doesn't exist
+  return userInfo; 
 };
 
 export const checkUsernameExists = async (username) => {
@@ -395,4 +399,28 @@ export const checkUsernameExists = async (username) => {
   const snapshot = await getDocs(q);
   const allUsernames = snapshot.docs.map(doc => doc.data().userInfo?.username).filter(Boolean);
   return allUsernames.includes(username) ? true : false;
+}
+
+export const saveProfilePicture = async (uid, file) => {
+  try {
+    // 1. Create the reference
+    const storageRef = ref(storage, `profile_pictures/${uid}`);
+
+    // 2. Upload the file
+    await uploadBytes(storageRef, file);
+
+    // 3. Get the actual HTTPS URL that a browser can display
+    const downloadURL = await getDownloadURL(storageRef);
+
+    // 4. Update the user document in Firestore with the real URL
+    const userRef = doc(db, "users", uid);
+    await updateDoc(userRef, { 
+      profilePictureUrl: downloadURL 
+    });
+
+    return downloadURL;
+  } catch (error) {
+    console.error("Error uploading profile picture:", error);
+    throw error;
+  }
 }

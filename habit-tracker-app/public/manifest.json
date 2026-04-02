@@ -25,6 +25,10 @@
     "48": "icons/Habitlio-Icon48.png",
     "128": "icons/Habitlio-Icon128.png"
   },
+"host_permissions": [
+  "https://*.googleapis.com/*",
+  "https://*.firebaseio.com/*"
+  ],
   "action": {
     "default_title": "Open Habit.lio"
   },

@@ -3,7 +3,8 @@ import { useState, useEffect, use } from "react";
 // import "../App.css";
 import "../css/Onboarding.css";
 
-import { saveOnboardingStatus, saveUserInfo, checkUsernameExists} from "../firestore.js";
+import { saveOnboardingStatus, saveUserInfo, 
+    checkUsernameExists, saveProfilePicture} from "../firestore.js";
 
 function Page1({currentPage, setCurrentPage}){
     const [pageName, setPageName] = useState("Page1");
@@ -69,12 +70,22 @@ function Page2({currentPage, setCurrentPage, setUserInfo}){
     )
 }
 
-function Page3({currentPage, setCurrentPage}){
+function Page3({currentPage, setCurrentPage, user}){
     const [pageName, setPageName] = useState("Page3");
+    const [profilePicture, setProfilePicture] = useState(null);
     // console.log("current page should be 3: ", currentPage !== pageName);
     // var fileInputRef = document.getElementById("profile-picture");
     // // Erase the file selected if users decide to click "upload file after uploading"
-
+    const handleUpload =  async(file) => {
+        if (file) {
+            const pictureUrl = await saveProfilePicture(user.uid, file);
+            if (pictureUrl) {
+                setCurrentPage("Page4");
+            } else {
+                console.error("Failed to save profile picture.");
+            }
+        }
+    }
 
     return(
         <div className="onboarding-wrapper" hidden = {currentPage !== pageName}>
@@ -84,10 +95,16 @@ function Page3({currentPage, setCurrentPage}){
             <p>Let the world know who you are!!</p>
             <label htmlFor="profile-picture">Upload Profile Picture</label>
             <input type="file" id="profile-picture" 
-            name="profile-picture" accept="image/*"  />
+            name="profile-picture" accept="image/*" onChange={(e) => setProfilePicture(e.target.files[0])}/>
+            {profilePicture && (
+                <div>
+                    <p>Selected Profile Picture:</p>
+                    <img src={URL.createObjectURL(profilePicture)} alt="Profile" />
+                </div>
+            )}
             <br />
             <button className="continue-btn"
-            onClick={() => setCurrentPage("Page4")} >Continue</button>
+            onClick={async () => {handleUpload(profilePicture)}} >Continue</button>
         </div>
         </div>
     )
@@ -274,7 +291,8 @@ function OnboardingPopup(props) {
                     setUserInfo={setUserInfo} />
 
                     < Page3 currentPage={currentPage} 
-                    setCurrentPage={setCurrentPage} />
+                    setCurrentPage={setCurrentPage}
+                    user={user} />
 
                     < Page4 currentPage={currentPage} 
                     setCurrentPage={setCurrentPage} 

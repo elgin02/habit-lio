@@ -27,6 +27,7 @@ import Habit from "./habitComponents/habit";
 import HabitDetails from "./HabitDetails";
 import { AuthContext } from "./AuthContext";
 import Onboarding from "./onboarding/Onboarding.jsx";
+import Affirmation from "./onboarding/affirmation.jsx";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -37,6 +38,7 @@ function App() {
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [greetUsername, setGreetUsername] = useState(false);
+  const [affirmations, setAffirmations] = useState([]);
 
   const [error, setAuthError] = useState(null);
   const [isSignUp, setIsSignUp] = useState(true);
@@ -58,8 +60,12 @@ function App() {
 
       const getUsername =  await getUserInfo(uid, "username");
       setUsername(getUsername);
+
       const getGreetUsername = await getUserInfo(uid, "greetUsername");
       setGreetUsername(getGreetUsername);
+
+      const getAffirmations = await getUserInfo(uid, "affirmations");
+      setAffirmations(getAffirmations);
     } catch (error) {
       console.error("Error loading habits:", error);
     }
@@ -237,10 +243,13 @@ function App() {
               habits={habits}
             />
             <p style={{ fontSize: "36px", color: "black" }}>
-              Welcome, <strong>{greetUsername ? username : user?.email}</strong>!
+              Welcome, <strong>{(greetUsername && username) ? username : user?.email}</strong>!
             </p>
             
             <div>
+              <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+              <Affirmation affirmations={affirmations}/>
+              </div>
               {/* // Display habits */}
               <h2 style={{ fontSize: "28px", color: "black" }}>Your Habits</h2>
               {/* <ul> */}

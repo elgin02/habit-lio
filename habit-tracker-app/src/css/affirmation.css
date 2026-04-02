@@ -1,0 +1,21 @@
+#today-affirmation-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: lightgreen;
+    color: black;
+    border-radius: 25%;
+    width: 30rem;
+}
+
+#today-affirmation-container h2{
+    font-size: 2.5em;
+    margin-bottom: 10px;
+}
+
+#today-affirmation-container p{
+    font-size: 1.9em;
+    text-align: center;
+    /* max-width: 400px; */
+}
