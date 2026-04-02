@@ -25,14 +25,18 @@
 
 #close-button {
   position: absolute;
-  top: 5px;
-  right: 2%;
+  top: 12px;
+  right: 14px;
+  background: none;
+  border: none;
+  font-size: 16px;
   cursor: pointer;
+  color: #aaa;
 }
 
 #close-button:hover {
-  color: #ffffff;
-  background-color: red;
+  color: #555;
+  background: none;
 }
 
 #back-button {
