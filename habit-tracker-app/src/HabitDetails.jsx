@@ -32,7 +32,6 @@ function NameDescription({ habit, updateHabitField }) {
                     </div>
                     <label htmlFor="color-picker">Set Color: </label>
                     <select name="color-picker" id="color-picker"
-                    ref={colorInputRef}
                     value={habit.color ?? "#b9b7b7"} 
                     onChange={(e) => updateHabitField("color", e.target.value)}>
                         <option value="#b9b7b7">Default</option>

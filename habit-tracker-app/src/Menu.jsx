@@ -1,18 +1,18 @@
-import { House, Users, Settings, Mail, Medal } from "lucide-react";
+import { House, Users, Settings, Mail } from "lucide-react";
 import "./App.css";
 import HabitCreate from "./habitCreate";
 import { useState } from "react";
 import SettingsPopup from "./Settings.jsx";
 import Badges from "./Badges.jsx";
 
-function Menu({ onHomeClick, addHabit, uid, habits }) {
+function Menu({ onHomeClick, addHabit, setShowFriendsPage }) {
   const [showSettings, setShowSettings] = useState(false);
   const [showBadges, setShowBadges] = useState(false);
   return (
     <>
       <div id="menu">
         {" "}
-        <button id="home-btn" title="Home" onClick={onHomeClick}>
+        <button id="home-btn" title="Home" onClick={() => {onHomeClick; setShowFriendsPage(false);}}>
           {" "}
           <House color="black" />{" "}
         </button>{" "}
@@ -26,6 +26,7 @@ function Menu({ onHomeClick, addHabit, uid, habits }) {
         </button>
         <span className="divider" />
         <button id="users-btn" title="Friends">
+        <button id="users-btn" title="Friends" onClick={() => setShowFriendsPage(true)}>
           {" "}
           <Users color="black" />{" "}
         </button>{" "}
