@@ -97,7 +97,7 @@ export const BADGES = [
     },
     {
         id: "habits_created_10",
-        name: "100 Habits Created: ",
+        name: "10 Habits Created: ",
         description: "Create 10 habits",
         emoji: "🏆",
         category: "habits_created",
