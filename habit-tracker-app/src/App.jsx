@@ -23,6 +23,7 @@ import HabitCreate from "./habitCreate";
 import NewHabitForm from "./habitAnalysis";
 import Habit from "./habitComponents/habit";
 import HabitDetails from "./HabitDetails";
+import FriendsPage from "./FriendsPage";
 import { AuthContext } from "./AuthContext";
 
 function App() {
@@ -179,6 +180,7 @@ function App() {
   //  const [uid, setUid] = useState("USER_ID_FROM_FIREBASE"); // This is your existing UID
 
   const [selectedHabit, setSelectedHabit] = useState(null);
+  const [showFriendsPage, setShowFriendsPage] = useState(false);
 
   return (
     // home page after login
@@ -187,6 +189,7 @@ function App() {
         {/* <h1>Habit-lio</h1> */}
         {user ? (
           <div>
+            
             { selectedHabit ? (<HabitDetails
                 habit={selectedHabit}
                 uid={user.uid}
@@ -194,16 +197,28 @@ function App() {
                 onClose={() => setSelectedHabit(null)}
               />) : (
                 <div>
+
+            
+
             <Menu
               onHomeClick={handleGoHome}
               onAddClick={() => setIsModalOpen(true)}
               addHabit={addHabit}
               uid={user.uid}
               habits={habits}
+              setShowFriendsPage={setShowFriendsPage}
             />
-            <p>
+            <p hidden={showFriendsPage}>
               Welcome, <strong>{user.email}</strong>!
             </p>
+            
+            { showFriendsPage && ( 
+              <div>
+                
+                <FriendsPage />
+              </div>
+              )}
+            
             
 
             {/* Modal for habit adding */}
@@ -256,15 +271,17 @@ function App() {
                 </div>
               </div>
             )}
-            <div>
+            <div hidden={showFriendsPage}>
               {/* // Display habits */}
               <h2 style={{ fontSize: "28px", color: "black" }}>Your Habits</h2>
               {/* <ul> */}
               {habits.map((habit) => (
-                < Habit key={habit.id} 
-                habit={habit} uid={user.uid}
-                 loadHabits={loadHabits}
-                 onEdit={() => setSelectedHabit(habit)}/>
+                <Habit key={habit.id} 
+                  habit={habit} 
+                  uid={user.uid}
+                  loadHabits={loadHabits}
+                  onEdit={() => setSelectedHabit(habit)}
+                />
                 // <li key={habit.id}>
                 //     <div>
                 //         <h3>{habit.title}</h3>
