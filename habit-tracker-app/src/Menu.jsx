@@ -6,7 +6,7 @@ import { useState } from "react";
 import SettingsPopup from "./Settings.jsx";
 import Badges from "./Badges.jsx";
 
-function Menu({ onHomeClick, addHabit, setShowFriendsPage, uid, habits }) {
+function Menu({ onHomeClick, addHabit, setShowFriendsPage, setShowMessagesPage, uid, habits }) {
   const [showSettings, setShowSettings] = useState(false);
   const [showBadges, setShowBadges] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
@@ -20,6 +20,7 @@ function Menu({ onHomeClick, addHabit, setShowFriendsPage, uid, habits }) {
           onClick={() => {
             onHomeClick;
             setShowFriendsPage(false);
+            setShowMessagesPage(false);
           }}
         >
           {" "}
@@ -48,13 +49,23 @@ function Menu({ onHomeClick, addHabit, setShowFriendsPage, uid, habits }) {
         <button
           id="friends-btn"
           title="Friends"
-          onClick={() => setShowFriendsPage(true)}
+          onClick={() => {
+            setShowFriendsPage(true);
+            setShowMessagesPage(false);
+          }}
         >
           {" "}
           <Users color="black" />{" "}
         </button>{" "}
         <span className="divider"></span>
-        <button id="mail-btn" title="Messages">
+        <button 
+          id="mail-btn" 
+          title="Messages"
+          onClick={() => {
+            setShowMessagesPage(true);
+            setShowFriendsPage(false);
+          }}
+        >
           {" "}
           <Mail color="black" />{" "}
         </button>{" "}
