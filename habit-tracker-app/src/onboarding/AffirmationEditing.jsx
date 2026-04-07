@@ -2,6 +2,7 @@
 import "../css/Affirmation.css";
 import { useState } from "react";
 import { useEffect } from "react";
+import { saveAffirmations } from "../second-firestore";
 // import AffirmationEditing from "./AffirmationEditing";
 
 function AffirmationInput({index, affirmation, setAffirmations}){
@@ -28,15 +29,22 @@ function AffirmationInput({index, affirmation, setAffirmations}){
 }
 
 function AffirmationEditing(props){
+    const [user, setUser] = useState(props.user);
     const[affirmations, setAffirmations] = useState(props.affirmations);
 
     useEffect(() => {
         setAffirmations(props.affirmations);
-    }, [props.affirmations]); // Runs whenever the parent passes new data
+        setUser(props.user);
+    }, [props.affirmations, props.user]); // Runs whenever the parent passes new data
 
     const showAffirmations = () => {
         console.log("Affirmations:");
         console.log(affirmations);
+    }
+
+    const handleSave = async () => {
+        const userId = user.uid; // Assuming user object has a uid property
+        await saveAffirmations(userId, affirmations);
     }
 
     return(
@@ -62,7 +70,12 @@ function AffirmationEditing(props){
                                         setAffirmations={setAffirmations} 
                                     />
                                 ))}
-                                <button onClick={showAffirmations}>Show Affirmations</button>
+                            <br />
+                                <button className="add-affirmation-btn" onClick={() => setAffirmations((prevAffirmations) => [...prevAffirmations, ""])}>Add Another</button>
+                            <br />
+                            <br />
+                            <button id="submit-btn" onClick={handleSave}>Save Affirmations</button>
+                                {/* <button onClick={showAffirmations}>Show Affirmations</button> */}
                             </div>
                         </div>
                     </div>

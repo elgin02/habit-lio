@@ -437,7 +437,7 @@ export const getUserInfo = async (uid, specificItem) => {
 
   // If you asked for "affirmations" but it's not there, 
   // return an empty array instead of the whole userInfo object.
-  return specificItem === "affirmations" ? [] : userInfo; 
+  return specificItem === "affirmations" ? [] : ""; 
 };
 
 export const checkUsernameExists = async (username) => {

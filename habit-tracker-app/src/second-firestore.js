@@ -18,13 +18,19 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 import { db, storage } from "./firebase";
 
-export const loadAffirmations = async (userId) => {
-  const affirmationsRef = collection(db, "users", userId, "userInfo", "affirmations");
-  const q = query(affirmationsRef, orderBy("createdAt", "asc"));
-    const querySnapshot = await getDocs(q);
-    const affirmations = [];
-    querySnapshot.forEach((doc) => {
-      affirmations.push({ id: doc.id, ...doc.data() });
+export const saveAffirmations = async (userId, affirmationsArray) => {
+  // Path is only 2 segments: collection "users", document "userId"
+  const userDocRef = doc(db, "users", userId);
+
+  try {
+    await updateDoc(userDocRef, {
+      // Use dot notation to reach inside the 'userInfo' map field
+      "userInfo.affirmations": affirmationsArray
     });
-    return affirmations;
+    
+    console.log("Affirmations updated!");
+    window.location.reload(); // Only use if you aren't updating React state
+  } catch (error) {
+    console.error("Error updating affirmations:", error);
+  }
 };

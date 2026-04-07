@@ -49,6 +49,7 @@ function App() {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [alreadyOnboarded, setAlreadyOnboarded] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
   // Load in the habits for the user,
   // called after login and after edits/deletes to refresh the habit list
@@ -71,6 +72,7 @@ function App() {
       const getAffirmations = await getUserInfo(uid, "affirmations");
       setAffirmations(getAffirmations);
       console.log("Affirmations: ", getAffirmations);
+      setLoaded(true);
 
     } catch (error) {
       console.error("Error loading habits:", error);
@@ -86,6 +88,7 @@ function App() {
         // console.log("Username set: ", username);
       } else {
         setHabits([]);
+        setLoaded(true);
       }
     });
 
@@ -235,6 +238,13 @@ function App() {
     <AuthContext.Provider value={user}>
       <div className="card">
         {user ? (
+        // Check if data is loaded before showing the dashboard
+        !loaded ? (
+          <div className="loading-container">
+            <div className="loading-bar" >
+            </div>
+          </div>
+        ) : (
           <div>
             { !alreadyOnboarded &&
               <Onboarding hidden={alreadyOnboarded} user={user} 
@@ -261,7 +271,7 @@ function App() {
                 </p>
 
                 <div hidden={showFriendsPage} style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                  <Affirmation affirmations={affirmations}/>
+                  <Affirmation user={user} affirmations={affirmations}/>
               </div>
 
                 {showFriendsPage && (
@@ -367,9 +377,16 @@ function App() {
               </div>
             )}
           </div>
+        )
         ) : (
           // sign in/sign up
           <div>
+            {!loaded ? (
+              <div className="loading-container">
+                <div className="loading-bar" >
+                </div>
+              </div>
+            ) : (
             <div id="login-container">
               <h1>{isSignUp ? "Welcome Back" : "Create Account"}</h1>
               <h2 id="login-subtitle">
@@ -433,6 +450,7 @@ function App() {
               <br />
               <script type="module" src="login.js"></script>
             </div>
+            )}
           </div>
         )}
       </div>
