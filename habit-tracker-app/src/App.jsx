@@ -25,6 +25,7 @@ import HabitCreate from "./habitCreate";
 import Habit from "./habitComponents/habit";
 import HabitDetails from "./HabitDetails";
 import FriendsPage from "./FriendsPage";
+import Messages from "./Messages";
 import { AuthContext } from "./AuthContext";
 import Onboarding from "./onboarding/Onboarding.jsx";
 import Affirmation from "./onboarding/affirmation.jsx";

@@ -29,6 +29,7 @@
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
   margin-top: 20px;
   margin-bottom: -6px;
+  z-index: 0;
 }
 
 #search-bar-requests-btn {
