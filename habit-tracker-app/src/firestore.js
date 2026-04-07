@@ -371,13 +371,19 @@ export const toggleHabitCompletion = async (uid, habitId) => {
     isCompleted = true;
   }
 
-  // Only write completions; streak is calculated server-side by Cloud Function
+  const localStreak = calculateStreak(updatedCompletions);
+  const sortedDates = [...updatedCompletions].sort(
+    (a, b) => new Date(b) - new Date(a),
+  );
+  const lastCompletedDate = sortedDates.length > 0 ? sortedDates[0] : null;
+
+  // Client-side streak validation/persistence.
   await updateDoc(habitRef, {
     completions: updatedCompletions,
+    streak: localStreak,
+    lastCompletedDate,
     updatedAt: serverTimestamp(),
   });
-
-  const localStreak = calculateStreak(updatedCompletions);
 
   return { isCompleted, streak: localStreak };
 };
@@ -428,6 +434,10 @@ export const getUserInfo = async (uid, specificItem) => {
   if (!snapshot.exists()) return null;
   
   const userInfo = snapshot.data().userInfo;
+
+  if (!userInfo || typeof userInfo !== "object") {
+    return null;
+  }
 
   // Check if the specific key exists in the userInfo object
   if (specificItem in userInfo) {

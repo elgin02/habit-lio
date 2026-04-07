@@ -62,6 +62,17 @@ exports.onHabitUpdate = functions.firestore
       lastCompletedDate = sortedDates[0];
     }
 
+    const currentStreak = habitData.streak ?? 0;
+    const currentLastCompletedDate = habitData.lastCompletedDate ?? null;
+
+    // Avoid self-trigger loops: only write when derived fields actually change.
+    if (
+      currentStreak === newStreak &&
+      currentLastCompletedDate === lastCompletedDate
+    ) {
+      return null;
+    }
+
     return db
       .collection("users")
       .doc(userId)

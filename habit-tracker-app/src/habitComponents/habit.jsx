@@ -1,5 +1,5 @@
 import HabitEdit from "./habitEdit";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toggleHabitCompletion, isHabitCompletedToday } from "../firestore";
 import '../css/habit.css'
 
@@ -16,6 +16,10 @@ function Habit({habit, uid, loadHabits, onEdit}){
     }
     const [isCompleted, setIsCompleted] = useState(isHabitCompletedToday(habit));
     const [isToggling, setIsToggling] = useState(false);
+
+    useEffect(() => {
+      setIsCompleted(isHabitCompletedToday(habit));
+    }, [habit]);
     
     console.log("Habit Props:", habit); // Debugging line to check the props being passed to Habit component
 
@@ -25,7 +29,7 @@ function Habit({habit, uid, loadHabits, onEdit}){
       setIsToggling(true);
       try {
         await toggleHabitCompletion(uid, habit.id);
-        setIsCompleted(!isCompleted);
+        setIsCompleted((prev) => !prev);
         // Reload habits to get updated streak
         if (loadHabits) {
           await loadHabits(uid);
