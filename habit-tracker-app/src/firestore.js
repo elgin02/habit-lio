@@ -12,32 +12,328 @@ import {
   addDoc,
   where,
   limit,
+  writeBatch,
 } from "firebase/firestore";
 
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
-import { db, storage } from "./firebase";
+import { auth, db, storage } from "./firebase";
 
 // Search for users by username
 export const searchUsers = async (searchString) => {
-  if (!searchString.trim()) return [];
-  try {
-    const q = query(
-      collection(db, "users"),
-      where("username", ">=", searchString.toLowerCase()),
-      where("username", "<=", searchString.toLowerCase() + "\uf8ff"),
-      limit(10),
-    );
+  const normalizedSearch = searchString.trim().toLowerCase();
+  if (!normalizedSearch) return [];
 
-    const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map((doc) => ({
-      uid: doc.id,
-      ...doc.data(),
-    }));
+  try {
+    const querySnapshot = await getDocs(collection(db, "users"));
+    const currentUserId = auth.currentUser?.uid;
+
+    return querySnapshot.docs
+      .map((docItem) => {
+        const data = docItem.data();
+        const username = data.username || data.userInfo?.username || "";
+
+        return {
+          uid: docItem.id,
+          ...data,
+          username,
+        };
+      })
+      .filter((user) => {
+        if (user.uid === currentUserId) return false;
+
+        const username = (user.username || "").toLowerCase();
+        return username.includes(normalizedSearch);
+      })
+      .slice(0, 10);
   } catch (error) {
     console.error("Error searching users:", error);
     return [];
   }
+};
+
+export const createFriendRequest = async (recipientUid) => {
+  const currentUser = auth.currentUser;
+
+  if (!currentUser) {
+    throw new Error("You must be signed in to send a friend request.");
+  }
+
+  if (!recipientUid) {
+    throw new Error("A valid recipient is required.");
+  }
+
+  if (recipientUid === currentUser.uid) {
+    throw new Error("You cannot send a friend request to yourself.");
+  }
+
+  const existingFriendRef = doc(
+    db,
+    "users",
+    currentUser.uid,
+    "friends",
+    recipientUid,
+  );
+  const existingFriendSnapshot = await getDoc(existingFriendRef);
+  if (existingFriendSnapshot.exists()) {
+    throw new Error("You are already friends with this user.");
+  }
+
+  const outgoingRequestId = `${currentUser.uid}_${recipientUid}`;
+  const incomingRequestId = `${recipientUid}_${currentUser.uid}`;
+  const outgoingRequestRef = doc(db, "friendRequests", outgoingRequestId);
+  const incomingRequestRef = doc(db, "friendRequests", incomingRequestId);
+
+  const [outgoingSnapshot, incomingSnapshot] = await Promise.all([
+    getDoc(outgoingRequestRef),
+    getDoc(incomingRequestRef),
+  ]);
+
+  if (outgoingSnapshot.exists() && outgoingSnapshot.data().status === "pending") {
+    throw new Error("Friend request already sent.");
+  }
+
+  if (incomingSnapshot.exists() && incomingSnapshot.data().status === "pending") {
+    throw new Error("This user already sent you a friend request.");
+  }
+
+  const senderProfile = await getUserProfile(currentUser.uid);
+  const recipientProfile = await getUserProfile(recipientUid);
+
+  const senderUsername =
+    senderProfile?.username ||
+    senderProfile?.userInfo?.username ||
+    currentUser.displayName ||
+    currentUser.email ||
+    currentUser.uid;
+
+  const recipientUsername =
+    recipientProfile?.username || recipientProfile?.userInfo?.username || "";
+
+  await setDoc(
+    outgoingRequestRef,
+    {
+      senderUid: currentUser.uid,
+      senderUsername,
+      recipientUid,
+      recipientUsername,
+      status: "pending",
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    },
+    { merge: true },
+  );
+
+  return outgoingRequestRef;
+};
+
+// Backwards-compatible helper for current FriendsPage usage.
+export const sendFriendRequest = async (recipientUser) => {
+  if (!recipientUser?.uid) {
+    throw new Error("A valid recipient is required.");
+  }
+
+  return createFriendRequest(recipientUser.uid);
+};
+
+export const listIncomingRequests = async (uid) => {
+  const currentUserId = uid || auth.currentUser?.uid;
+  if (!currentUserId) throw new Error("A valid user id is required.");
+
+  const requestQuery = query(
+    collection(db, "friendRequests"),
+    where("recipientUid", "==", currentUserId),
+  );
+
+  const snapshot = await getDocs(requestQuery);
+  return snapshot.docs
+    .map((docItem) => {
+      const data = docItem.data();
+      return {
+        id: docItem.id,
+        requestId: docItem.id,
+        uid: data.senderUid,
+        username: data.senderUsername || "",
+        ...data,
+      };
+    })
+    .filter((requestItem) => requestItem.status === "pending");
+};
+
+export const listOutgoingRequests = async (uid) => {
+  const currentUserId = uid || auth.currentUser?.uid;
+  if (!currentUserId) throw new Error("A valid user id is required.");
+
+  const requestQuery = query(
+    collection(db, "friendRequests"),
+    where("senderUid", "==", currentUserId),
+  );
+
+  const snapshot = await getDocs(requestQuery);
+  return snapshot.docs
+    .map((docItem) => {
+      const data = docItem.data();
+      return {
+        id: docItem.id,
+        requestId: docItem.id,
+        uid: data.recipientUid,
+        username: data.recipientUsername || "",
+        ...data,
+      };
+    })
+    .filter((requestItem) => requestItem.status === "pending");
+};
+
+export const acceptFriendRequest = async (requestId) => {
+  const currentUserId = auth.currentUser?.uid;
+  if (!currentUserId) throw new Error("You must be signed in.");
+  if (!requestId) throw new Error("requestId is required.");
+
+  const requestRef = doc(db, "friendRequests", requestId);
+  const requestSnapshot = await getDoc(requestRef);
+  if (!requestSnapshot.exists()) throw new Error("Friend request not found.");
+
+  const requestData = requestSnapshot.data();
+  if (requestData.recipientUid !== currentUserId) {
+    throw new Error("Only the recipient can accept this friend request.");
+  }
+
+  if (requestData.status !== "pending") {
+    throw new Error("Only pending requests can be accepted.");
+  }
+
+  const batch = writeBatch(db);
+  const recipientFriendRef = doc(
+    db,
+    "users",
+    requestData.recipientUid,
+    "friends",
+    requestData.senderUid,
+  );
+  const senderFriendRef = doc(
+    db,
+    "users",
+    requestData.senderUid,
+    "friends",
+    requestData.recipientUid,
+  );
+
+  batch.update(requestRef, {
+    status: "accepted",
+    updatedAt: serverTimestamp(),
+  });
+
+  batch.set(
+    recipientFriendRef,
+    {
+      friendUid: requestData.senderUid,
+      username: requestData.senderUsername || "",
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    },
+    { merge: true },
+  );
+
+  batch.set(
+    senderFriendRef,
+    {
+      friendUid: requestData.recipientUid,
+      username: requestData.recipientUsername || "",
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    },
+    { merge: true },
+  );
+
+  await batch.commit();
+};
+
+export const declineFriendRequest = async (requestId) => {
+  const currentUserId = auth.currentUser?.uid;
+  if (!currentUserId) throw new Error("You must be signed in.");
+  if (!requestId) throw new Error("requestId is required.");
+
+  const requestRef = doc(db, "friendRequests", requestId);
+  const requestSnapshot = await getDoc(requestRef);
+  if (!requestSnapshot.exists()) throw new Error("Friend request not found.");
+
+  const requestData = requestSnapshot.data();
+  if (requestData.recipientUid !== currentUserId) {
+    throw new Error("Only the recipient can decline this friend request.");
+  }
+
+  if (requestData.status !== "pending") {
+    throw new Error("Only pending requests can be declined.");
+  }
+
+  await updateDoc(requestRef, {
+    status: "declined",
+    updatedAt: serverTimestamp(),
+  });
+};
+
+export const cancelFriendRequest = async (requestId) => {
+  const currentUserId = auth.currentUser?.uid;
+  if (!currentUserId) throw new Error("You must be signed in.");
+  if (!requestId) throw new Error("requestId is required.");
+
+  const requestRef = doc(db, "friendRequests", requestId);
+  const requestSnapshot = await getDoc(requestRef);
+  if (!requestSnapshot.exists()) throw new Error("Friend request not found.");
+
+  const requestData = requestSnapshot.data();
+  if (requestData.senderUid !== currentUserId) {
+    throw new Error("Only the sender can cancel this friend request.");
+  }
+
+  if (requestData.status !== "pending") {
+    throw new Error("Only pending requests can be canceled.");
+  }
+
+  await updateDoc(requestRef, {
+    status: "canceled",
+    updatedAt: serverTimestamp(),
+  });
+};
+
+export const listFriends = async (uid) => {
+  const currentUserId = uid || auth.currentUser?.uid;
+  if (!currentUserId) throw new Error("A valid user id is required.");
+
+  const friendsRef = collection(db, "users", currentUserId, "friends");
+  const snapshot = await getDocs(friendsRef);
+
+  return snapshot.docs.map((docItem) => ({
+    id: docItem.id,
+    ...docItem.data(),
+    uid: docItem.data().friendUid || docItem.id,
+    username: docItem.data().username || "",
+  }));
+};
+
+export const removeFriend = async (friendUid, uid) => {
+  const currentUserId = uid || auth.currentUser?.uid;
+  if (!currentUserId || !friendUid) {
+    throw new Error("Both current uid and friend uid are required.");
+  }
+
+  if (currentUserId === friendUid) {
+    throw new Error("You cannot remove yourself as a friend.");
+  }
+
+  const currentUserFriendRef = doc(db, "users", currentUserId, "friends", friendUid);
+  const reciprocalFriendRef = doc(db, "users", friendUid, "friends", currentUserId);
+
+  const outgoingRequestRef = doc(db, "friendRequests", `${currentUserId}_${friendUid}`);
+  const incomingRequestRef = doc(db, "friendRequests", `${friendUid}_${currentUserId}`);
+
+  const batch = writeBatch(db);
+  batch.delete(currentUserFriendRef);
+  batch.delete(reciprocalFriendRef);
+  batch.delete(outgoingRequestRef);
+  batch.delete(incomingRequestRef);
+
+  await batch.commit();
 };
 
 export const createUserProfile = async (
@@ -455,7 +751,12 @@ export const checkUsernameExists = async (username) => {
   const usersRef = collection(db, "users");
   const q = query(usersRef);
   const snapshot = await getDocs(q);
-  const allUsernames = snapshot.docs.map(doc => doc.data().userInfo?.username).filter(Boolean);
+  const allUsernames = snapshot.docs
+    .map((docItem) => {
+      const data = docItem.data();
+      return data.username || data.userInfo?.username;
+    })
+    .filter(Boolean);
   return allUsernames.includes(username) ? true : false;
 }
 
