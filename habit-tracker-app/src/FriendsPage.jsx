@@ -8,45 +8,16 @@ import {
 } from "lucide-react";
 import "./index.css";
 import "./FriendsPage.css";
-import { searchUsers } from "./firestore";
-
-
-// -- Using fake information for now -----------------------------
-const friends = [
-  { uid: 1, name: "Alex Rivera", username: "alexrivera" },
-  { uid: 2, name: "Jordan Kim", username: "jordankim" },
-  { uid: 3, name: "Sam Patel", username: "sampatel" },
-  { uid: 4, name: "Casey Morgan", username: "caseymorgan" },
-];
-
-const INITIAL_REQUESTS = [
-  { uid: 5, name: "Taylor Swift", username: "taylorswift" },
-  { uid: 6, name: "Chris Wu", username: "chriswu" },
-  { uid: 7, name: "Dana Lee", username: "danalee" },
-  { uid: 8, name: "Morgan Gray", username: "morgangray" },
-  { uid: 9, name: "Jamie Cole", username: "jamiecole" },
-  { uid: 10, name: "Reese Park", username: "reesepark" },
-];
-
-const ALL_USERS = [
-  { uid: 1, name: "Alex Rivera", username: "alexrivera" },
-  { uid: 2, name: "Jordan Kim", username: "jordankim" },
-  { uid: 3, name: "Sam Patel", username: "sampatel" },
-  { uid: 4, name: "Casey Morgan", username: "caseymorgan" },
-  { uid: 5, name: "Taylor Swift", username: "taylorswift" },
-  { uid: 6, name: "Chris Wu", username: "chriswu" },
-  { uid: 7, name: "Dana Lee", username: "danalee" },
-  { uid: 8, name: "Morgan Gray", username: "morgangray" },
-  { uid: 9, name: "Jamie Cole", username: "jamiecole" },
-  { uid: 10, name: "Reese Park", username: "reesepark" },
-  { uid: 11, name: "Priya Nair", username: "priyanair" },
-  { uid: 12, name: "Luca Bianchi", username: "lucabianchi" },
-  { uid: 13, name: "Sofia Reyes", username: "sofiareyes" },
-  { uid: 14, name: "Ethan Brooks", username: "ethanbrooks" },
-  { uid: 15, name: "Mei Tanaka", username: "meitanaka" },
-];
-
-// -----------------------------------------------------------------
+import {
+  searchUsers,
+  createFriendRequest,
+  listIncomingRequests,
+  listOutgoingRequests,
+  listFriends,
+  acceptFriendRequest,
+  declineFriendRequest,
+  removeFriend,
+} from "./firestore";
 
 const FriendCard = ({ friend, onClick }) => (
   <button className="friend-card" onClick={() => onClick(friend)}>
@@ -69,7 +40,7 @@ const FriendCard = ({ friend, onClick }) => (
 );
 
 // -- Friends List/Search -------------------------------------------------------------
-const FriendsList = ({ onFriendClick, onRequestsClick, requestCount }) => {
+const FriendsList = ({ onFriendClick, onRequestsClick, requestCount, friends }) => {
   const [search, setSearch] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const hasInput = search.trim().length > 0;
@@ -217,6 +188,8 @@ const UserProfileModal = ({
   user,
   isFriend,
   hasRequest,
+  requestSent,
+  isSendingRequest,
   sendRequest,
   onClose,
   onAccept,
@@ -276,12 +249,13 @@ const UserProfileModal = ({
           <div>
             <button
               className="profile-btn profile-btn-add"
+              disabled={requestSent || isSendingRequest}
               onClick={() => {
                 sendRequest(user.uid);
               }}
             >
               <UserPlus />
-              Add Friend
+              {requestSent ? "Request Sent" : isSendingRequest ? "Sending..." : "Add Friend"}
             </button>
           </div>
         )}
@@ -295,22 +269,95 @@ const UserProfileModal = ({
 function FriendsPage() {
   const [selectedUser, setSelectedUser] = useState(null);
   const [showRequests, setShowRequests] = useState(false);
-  const [requests, setRequests] = useState(INITIAL_REQUESTS);
-  const [friendList, setFriendsList] = useState(friends);
+  const [requests, setRequests] = useState([]);
+  const [friendList, setFriendsList] = useState([]);
+  const [outgoingRequests, setOutgoingRequests] = useState([]);
+  const [sendingRequestUid, setSendingRequestUid] = useState(null);
 
-  // Needs set up with firestore
-  //const handleAccept  = id => setRequests(r => r.filter(req => req.id !== id));
-  //const handleDecline = id => setRequests(r => r.filter(req => req.id !== id));
+  const refreshFriendsData = async () => {
+    try {
+      const [friendsData, incomingData, outgoingData] = await Promise.all([
+        listFriends(),
+        listIncomingRequests(),
+        listOutgoingRequests(),
+      ]);
+
+      setFriendsList(friendsData);
+      setRequests(incomingData);
+      setOutgoingRequests(outgoingData);
+    } catch (error) {
+      console.error("Failed to load friends data:", error);
+    }
+  };
+
+  useEffect(() => {
+    refreshFriendsData();
+  }, []);
 
   const isFriend = (uid) => friendList.some((f) => f.uid === uid);
-  const hasRequest = (uid) => requests.some((r) => r.uid === uid);
+  const incomingRequestForUser = (uid) => requests.find((r) => r.uid === uid);
+  const hasRequest = (uid) => Boolean(incomingRequestForUser(uid));
+  const requestSent = (uid) => outgoingRequests.some((r) => r.uid === uid);
+
+  const handleSendRequest = async (recipientUser) => {
+    if (!recipientUser?.uid) return;
+
+    try {
+      setSendingRequestUid(recipientUser.uid);
+      await createFriendRequest(recipientUser.uid);
+      await refreshFriendsData();
+    } catch (error) {
+      console.error("Failed to send friend request:", error);
+    } finally {
+      setSendingRequestUid(null);
+    }
+  };
+
+  const handleAcceptRequest = async (requesterUid) => {
+    const requestItem = incomingRequestForUser(requesterUid);
+    if (!requestItem?.requestId) return;
+
+    try {
+      await acceptFriendRequest(requestItem.requestId);
+      await refreshFriendsData();
+    } catch (error) {
+      console.error("Failed to accept friend request:", error);
+    }
+  };
+
+  const handleDeclineRequest = async (requesterUid) => {
+    const requestItem = incomingRequestForUser(requesterUid);
+    if (!requestItem?.requestId) return;
+
+    try {
+      await declineFriendRequest(requestItem.requestId);
+      await refreshFriendsData();
+    } catch (error) {
+      console.error("Failed to decline friend request:", error);
+    }
+  };
+
+  const handleRemoveFriend = async (friendUid) => {
+    if (!friendUid) return;
+
+    try {
+      await removeFriend(friendUid);
+      await refreshFriendsData();
+      if (selectedUser?.uid === friendUid) {
+        setSelectedUser(null);
+      }
+    } catch (error) {
+      console.error("Failed to remove friend:", error);
+    }
+  };
 
   return (
     <div style={{ minWidth: "75vh" }}>
       <FriendsList
         onFriendClick={setSelectedUser}
         onRequestsClick={() => setShowRequests(true)}
-        requestCount={INITIAL_REQUESTS.length}
+        requestCount={requests.length}
+        friends={friendList}
       />
 
       {selectedUser && (
@@ -318,11 +365,13 @@ function FriendsPage() {
           user={selectedUser}
           isFriend={isFriend(selectedUser.uid)}
           hasRequest={hasRequest(selectedUser.uid)}
+          requestSent={requestSent(selectedUser.uid)}
+          isSendingRequest={sendingRequestUid === selectedUser.uid}
           onClose={() => setSelectedUser(null)}
-          //sendRequest={handleSendRequest}
-          //onAdd={handleAddFriend}
-          //onDecline={handleDeclineFriend}
-          //onRemove={handleRemoveFriend}
+          sendRequest={() => handleSendRequest(selectedUser)}
+          onAccept={handleAcceptRequest}
+          onDecline={handleDeclineRequest}
+          onRemoveFriend={handleRemoveFriend}
         />
       )}
 
@@ -331,8 +380,8 @@ function FriendsPage() {
           requests={requests}
           onClose={() => setShowRequests(false)}
           onUserClick={setSelectedUser}
-          //onAccept={handleAccept}
-          //onDecline={handleDecline}
+          onAccept={handleAcceptRequest}
+          onDecline={handleDeclineRequest}
         />
       )}
     </div>
