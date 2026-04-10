@@ -42,6 +42,8 @@ export const searchUsers = async (searchString) => {
       .filter((user) => {
         if (user.uid === currentUserId) return false;
 
+        if (!user.isPublic) return false;
+
         const username = (user.username || "").toLowerCase();
         return username.includes(normalizedSearch);
       })
@@ -89,11 +91,17 @@ export const createFriendRequest = async (recipientUid) => {
     getDoc(incomingRequestRef),
   ]);
 
-  if (outgoingSnapshot.exists() && outgoingSnapshot.data().status === "pending") {
+  if (
+    outgoingSnapshot.exists() &&
+    outgoingSnapshot.data().status === "pending"
+  ) {
     throw new Error("Friend request already sent.");
   }
 
-  if (incomingSnapshot.exists() && incomingSnapshot.data().status === "pending") {
+  if (
+    incomingSnapshot.exists() &&
+    incomingSnapshot.data().status === "pending"
+  ) {
     throw new Error("This user already sent you a friend request.");
   }
 
@@ -321,11 +329,31 @@ export const removeFriend = async (friendUid, uid) => {
     throw new Error("You cannot remove yourself as a friend.");
   }
 
-  const currentUserFriendRef = doc(db, "users", currentUserId, "friends", friendUid);
-  const reciprocalFriendRef = doc(db, "users", friendUid, "friends", currentUserId);
+  const currentUserFriendRef = doc(
+    db,
+    "users",
+    currentUserId,
+    "friends",
+    friendUid,
+  );
+  const reciprocalFriendRef = doc(
+    db,
+    "users",
+    friendUid,
+    "friends",
+    currentUserId,
+  );
 
-  const outgoingRequestRef = doc(db, "friendRequests", `${currentUserId}_${friendUid}`);
-  const incomingRequestRef = doc(db, "friendRequests", `${friendUid}_${currentUserId}`);
+  const outgoingRequestRef = doc(
+    db,
+    "friendRequests",
+    `${currentUserId}_${friendUid}`,
+  );
+  const incomingRequestRef = doc(
+    db,
+    "friendRequests",
+    `${friendUid}_${currentUserId}`,
+  );
 
   const batch = writeBatch(db);
   batch.delete(currentUserFriendRef);
@@ -488,7 +516,6 @@ export const handleSaveHabit = async (user, updatedHabit) => {
         periodInMinutes: 1440, // 24 hours
       });
     }
-    
   } catch (error) {
     console.error("Failed to update habit:", error);
   }
@@ -709,29 +736,29 @@ export const getOnboardingStatus = async (uid) => {
   const snapshot = await getDoc(userRef);
   if (!snapshot.exists()) return false;
   return snapshot.data().alreadyOnboarded ?? false;
-}
+};
 
 // Saves user onboarding status to firestore
 export const saveOnboardingStatus = async (uid, status) => {
   const userRef = doc(db, "users", uid);
   await updateDoc(userRef, { alreadyOnboarded: status });
-}
+};
 
 export const saveUserInfo = async (uid, userInfo) => {
   const userRef = doc(db, "users", uid);
   await updateDoc(userRef, { userInfo: userInfo });
   window.location.reload();
-}
+};
 
 export const getUserInfo = async (uid, specificItem) => {
   const userRef = doc(db, "users", uid);
   const snapshot = await getDoc(userRef);
-  
+
   if (!snapshot.exists()) return null;
-  
+
   const data = snapshot.data();
   // Ensure userInfo exists before trying to access keys inside it
-  const userInfo = data.userInfo || {}; 
+  const userInfo = data.userInfo || {};
 
   if (!userInfo || typeof userInfo !== "object") {
     return null;
@@ -742,9 +769,9 @@ export const getUserInfo = async (uid, specificItem) => {
     return userInfo[specificItem];
   }
 
-  // If you asked for "affirmations" but it's not there, 
+  // If you asked for "affirmations" but it's not there,
   // return an empty array instead of the whole userInfo object.
-  return specificItem === "affirmations" ? [] : ""; 
+  return specificItem === "affirmations" ? [] : "";
 };
 
 export const checkUsernameExists = async (username) => {
@@ -758,7 +785,7 @@ export const checkUsernameExists = async (username) => {
     })
     .filter(Boolean);
   return allUsernames.includes(username) ? true : false;
-}
+};
 
 export const saveProfilePicture = async (uid, file) => {
   try {
@@ -773,8 +800,8 @@ export const saveProfilePicture = async (uid, file) => {
 
     // 4. Update the user document in Firestore with the real URL
     const userRef = doc(db, "users", uid);
-    await updateDoc(userRef, { 
-      profilePictureUrl: downloadURL 
+    await updateDoc(userRef, {
+      profilePictureUrl: downloadURL,
     });
 
     return downloadURL;
@@ -782,4 +809,4 @@ export const saveProfilePicture = async (uid, file) => {
     console.error("Error uploading profile picture:", error);
     throw error;
   }
-}
+};
