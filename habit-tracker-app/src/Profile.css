@@ -246,6 +246,14 @@
   flex-shrink: 0;
 }
 
+.profile-toggle-hint {
+  font-size: 12px;
+  color: #aaa;
+  text-align: center;
+  margin: 4px 0 8px;
+  max-width: 260px;
+}
+
 .profile-toggle input {
   opacity: 0;
   width: 0;

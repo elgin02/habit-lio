@@ -299,6 +299,11 @@ function Profile({ uid, onClose }) {
                 <span className="profile-toggle-slider" />
               </label>
             </div>
+            <p className="profile-toggle-hint">
+              {editPublic
+                ? "Others can find and send you friend requests."
+                : "Your profile is private. You can still send friend requests, but others cannot send them to you."}
+            </p>
 
             <input
               className="profile-input"
