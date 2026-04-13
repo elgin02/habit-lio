@@ -256,6 +256,14 @@
   background-color: #767676;
 }
 
+#request-card-picture-placeholder {
+  background-color: #767676;
+  width: 50px;
+  height: 50px;
+  align-items: center;
+  border-radius: 50%;
+}
+
 #request-card-name {
   font-weight: 600;
   font-size: 11px;
@@ -358,6 +366,7 @@
 }
 
 #profile-modal-picture img,
+#request-card-picture img,
 .search-dropdown-picture img,
 .friend-picture img {
   width: 100%;

@@ -174,7 +174,13 @@ const FriendRequestsModal = ({
             onClick={() => onUserClick(req)}
           >
             <div id="request-card-wrapper">
-              <div id="request-card-picture"></div>
+              <div id="request-card-picture">
+                {req.profilePictureUrl ? (
+                  <img src={req.profilePictureUrl} />
+                ) : (
+                  <div id="request-card-picture-placeholder">?</div>
+                )}
+              </div>
               <div id="request-card-username">@{req.username}</div>
             </div>
 
@@ -260,7 +266,7 @@ const UserProfileModal = ({
                 onAccept(user.uid);
               }}
             >
-              <UserPlus /> Accept Request
+              <UserCheck /> Accept Request
             </button>
 
             <button
