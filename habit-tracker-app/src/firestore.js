@@ -338,11 +338,16 @@ export const listFriends = async (uid) => {
 
   return friendDocs
     .filter((d) => d.exists())
-    .map((d) => ({
-      uid: d.id,
-      username: d.data().username || d.data().userInfo?.username || "",
-      profilePictureUrl: d.data().profilePictureUrl || "",
-    }));
+    .map((d) => {
+      const data = d.data();
+
+      return {
+        uid: d.id,
+        username: data.username || data.userInfo?.username || "",
+        profilePictureUrl: data.profilePictureUrl || "",
+        bio: data.bio || "", // ✅ ADD THIS
+      };
+    });
 };
 
 export const removeFriend = async (friendUid, uid) => {
