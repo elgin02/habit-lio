@@ -256,6 +256,7 @@ function App() {
   const [selectedHabit, setSelectedHabit] = useState(null);
   const [showFriendsPage, setShowFriendsPage] = useState(false);
   const [showMessagesPage, setShowMessagesPage] = useState(false);
+  const [friendMessage, setFriendMessage] = useState(null);
 
   return (
     // home page after login
@@ -308,7 +309,11 @@ function App() {
 
                 {showFriendsPage && (
                   <div>
-                    <FriendsPage />
+                    <FriendsPage 
+                      setFriendMessage={setFriendMessage} 
+                      setShowMessagesPage={setShowMessagesPage} 
+                      setShowFriendsPage={setShowFriendsPage} 
+                    />
                   </div>
                 )}
 

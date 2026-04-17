@@ -274,6 +274,9 @@ const UserProfileModal = ({
   stats,
   habitsData,
   statsLoading,
+  setFriendMessage,
+  setShowMessagesPage,
+  setShowFriendsPage
 }) => {
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [availableYears, setAvailableYears] = useState([
@@ -369,7 +372,9 @@ const UserProfileModal = ({
           >
             <UserX size={14} /> Remove
           </button>
-          <button className="profile-btn profile-btn-message">
+          <button className="profile-btn profile-btn-message" 
+            onClick={() => { setFriendMessage={user}; setShowFriendsPage(false); setShowMessagesPage(true); }}
+          >
             <MessageCircle size={14} /> Message
           </button>
         </div>
@@ -562,7 +567,7 @@ const UserProfileModal = ({
 };
 
 // -- FriendsPage -------------------------------------------------------------------
-function FriendsPage() {
+function FriendsPage({ setFriendMessage, setShowMessagesPage, setShowFriendsPage }) {
   const [selectedUser, setSelectedUser] = useState(null);
   const [showRequests, setShowRequests] = useState(false);
   const [requests, setRequests] = useState([]);
@@ -737,6 +742,9 @@ function FriendsPage() {
           stats={selectedUserStats}
           habitsData={selectedUserHabits}
           statsLoading={statsLoading}
+          setFriendMessage={setFriendMessage}
+          setShowMessagesPage={setShowMessagesPage}
+          setShowFriendsPage={setShowFriendsPage}
         />
       )}
 
