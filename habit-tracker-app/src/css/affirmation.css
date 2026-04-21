@@ -100,3 +100,21 @@
     width: 20%;
     height: 10%;
 }
+
+.affirmation-input-inner{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.affirmation-input-creation{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    gap: 10px;
+}

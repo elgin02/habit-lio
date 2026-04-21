@@ -4,7 +4,7 @@ import "../css/Dropdown.css";
 import { useState } from "react";
 import { useEffect } from "react";
 import { saveAffirmations } from "../second-firestore";
-import{Lightbulb} from "lucide-react";
+import{Lightbulb, Minus} from "lucide-react";
 import { generateAffirmations } from "../gemini";
 import DefaultAffirmations from "./DefaultAffirmations";
 
@@ -48,46 +48,50 @@ function AffirmationInput({index, affirmation, setAffirmations}){
             <p>(100 Characters or Less)</p>
             <div className="affirmation-input-container">
                 <div className="affirmation-input-inner">
-                    <input type="text" id={`affirmation-${index}`} name={`affirmation-${index}`} 
-                    placeholder={`Affirmation ${index + 1}`} 
-                    maxlength = "100"
-                    aria-label={`Positive Affirmation ${index + 1}`}
-                    value={affirmationText}
-                    onChange={(e) => {
-                        setAffirmationText(e.target.value);
-                        setAffirmations((prevAffirmations) => {
-                            const newAffirmations = [...prevAffirmations];
-                            newAffirmations[index] = e.target.value;
-                            return newAffirmations;
-                        }
-                        )}}/>
-                    < DefaultAffirmations hidden={!showSelector} 
-                    setAffirmations={setAffirmations}
-                    setShowSelector={setShowSelector}
-                    setAffirmationFromSelector={setAffirmationFromSelector}/>
-                    <div className="dropdown">
-                        {/* <AffirmationSelector hidden={showSelector} 
-                        affirmations={affirmationText} 
-                        setAffirmations={setAffirmationText}/> */}
+                    <button><Minus color="#ff0000" /></button>
+                    <div className="affirmation-input-creation">
+                        <input type="text" id={`affirmation-${index}`} 
+                        name={`affirmation-${index}`} 
+                        placeholder={`Affirmation ${index + 1}`} 
+                        maxlength = "100"
+                        aria-label={`Positive Affirmation ${index + 1}`}
+                        value={affirmationText}
+                        onChange={(e) => {
+                            setAffirmationText(e.target.value);
+                            setAffirmations((prevAffirmations) => {
+                                const newAffirmations = [...prevAffirmations];
+                                newAffirmations[index] = e.target.value;
+                                return newAffirmations;
+                            }
+                            )}}/>
+                        < DefaultAffirmations hidden={!showSelector} 
+                        setAffirmations={setAffirmations}
+                        setShowSelector={setShowSelector}
+                        setAffirmationFromSelector={setAffirmationFromSelector}/>
+                        <div className="dropdown">
+                            {/* <AffirmationSelector hidden={showSelector} 
+                            affirmations={affirmationText} 
+                            setAffirmations={setAffirmationText}/> */}
 
-                        <button id="generate-affirmation-btn" 
-                        className="dropbtn"
-                        title="Generate Affirmation" 
-                        disabled={disabled}>
-                            <Lightbulb />
-                            </button>
-                        <div className="dropdown-content">
-                            <a href="#"
-                             onClick={() => setShowSelector(!showSelector)}>
-                                Select an Affirmation🧑‍💻
+                            <button id="generate-affirmation-btn" 
+                            className="dropbtn"
+                            title="Generate Affirmation" 
+                            disabled={disabled}>
+                                <Lightbulb />
+                                </button>
+                            <div className="dropdown-content">
+                                <a href="#"
+                                onClick={() => setShowSelector(!showSelector)}>
+                                    Select an Affirmation🧑‍💻
+                                    </a>
+                                <a href="#" onClick={
+                                    () => {
+                                        generateAffirmation();
+                                    }
+                                }>
+                                    Generate an Affirmation💭
                                 </a>
-                            <a href="#" onClick={
-                                () => {
-                                    generateAffirmation();
-                                }
-                            }>
-                                Generate an Affirmation💭
-                            </a>
+                            </div>
                         </div>
                     </div>
                 </div>
