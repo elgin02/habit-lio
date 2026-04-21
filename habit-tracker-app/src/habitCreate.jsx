@@ -497,76 +497,80 @@ function CreateHabitForm(props) {
       >
         {/* Initial Info */}
         <div id="habit-form-first-row">
-          <div id="habit-circle-created">
-            <div
-              id="habit-emoji"
-              style={{
-                backgroundColor: color,
-                width: "10em",
-                height: "10em",
-                borderRadius: "50%",
-              }}
-            >
-              <EmojiSelect
-                value={emoji}
-                onChange={(emoji) => {
-                  setEmoji(emoji);
+          <div id="habit-form-header">
+            <div id="habit-circle-created">
+              <div
+                id="habit-emoji"
+                style={{
+                  backgroundColor: color,
+                  width: "5em",
+                  height: "5em",
+                  borderRadius: "50%",
                 }}
+              >
+                <EmojiSelect
+                  value={emoji}
+                  onChange={(emoji) => {
+                    setEmoji(emoji);
+                  }}
+                />
+              </div>
+              <br />
+              <span>
+                <label htmlFor="color-picker" style={{ fontSize: "12px" }}>
+                  Set Color: 
+                </label>
+                <select
+                  name="color-picker"
+                  id="color-picker"
+                  value={color}
+                  onChange={(e) => setColor(e.target.value)}
+                >
+                  <option value="#b9b7b7">Default</option>
+                  <option value="#f8aaaa">Red</option>
+                  <option value="#aaffaa">Green</option>
+                  <option value="#aaaaff">Blue</option>
+                  <option value="#ffffaa">Yellow</option>
+                  <option value="#ffb6c1">Pink</option>
+                  <option value="#ffa500">Orange</option>
+                  <option value="#800080">Purple</option>
+                </select>
+
+                {/* <input type="color" id="color-picker" 
+                              name="emoji-color" value={color} onChange={(e) => setColor(e.target.value)}/> */}
+              </span>
+            </div>
+              <div id="habit-info">
+              <label
+                htmlFor="habit-name-created"
+                style={{ fontSize: "18px", textAlign: "center" }}
+              >
+                Habit Name
+              </label>
+              <input
+                type="text"
+                id="habit-name-created"
+                name="habit-name-created"
+                placeholder="Habit Name"
+                value={props.habitName}
+                onChange={(e) => props.setHabitName(e.target.value)}
+                required
+              />
+              {/* <br /> */}
+              {/* <br /> */}
+              <label
+                htmlFor="habit-description"
+                style={{ fontSize: "18px", textAlign: "center" }}
+              >
+                Habit Description
+              </label>
+              <textarea
+                id="habit-description"
+                maxlength="100"
+                name="habit-description"
+                placeholder="Add Description"
               />
             </div>
-            <br />
-            <span>
-              <label htmlFor="color-picker">Set Color: </label>
-              <select
-                name="color-picker"
-                id="color-picker"
-                value={color}
-                onChange={(e) => setColor(e.target.value)}
-              >
-                <option value="#b9b7b7">Default</option>
-                <option value="#f8aaaa">Red</option>
-                <option value="#aaffaa">Green</option>
-                <option value="#aaaaff">Blue</option>
-                <option value="#ffffaa">Yellow</option>
-                <option value="#ffb6c1">Pink</option>
-                <option value="#ffa500">Orange</option>
-                <option value="#800080">Purple</option>
-              </select>
-
-              {/* <input type="color" id="color-picker" 
-                            name="emoji-color" value={color} onChange={(e) => setColor(e.target.value)}/> */}
-            </span>
-          </div>
-          <div id="habit-info">
-            <label
-              htmlFor="habit-name-created"
-              style={{ fontSize: "18px", textAlign: "center" }}
-            >
-              Habit Name
-            </label>
-            <input
-              type="text"
-              id="habit-name-created"
-              name="habit-name-created"
-              placeholder="Habit Name"
-              value={props.habitName}
-              onChange={(e) => props.setHabitName(e.target.value)}
-              required
-            />
-            <br />
-            {/* <br /> */}
-            <label
-              htmlFor="habit-description"
-              style={{ fontSize: "18px", textAlign: "center" }}
-            >
-              Habit Description
-            </label>
-            <textarea
-              id="habit-description"
-              maxlength="100"
-              name="habit-description"
-              placeholder="Add Description"
-            />
           </div>
         </div>
         <br />
@@ -598,60 +602,66 @@ function CreateHabitForm(props) {
         <div id="habit-form-third-row">
           <h2 style={{ fontSize: "24px", textAlign: "center" }}>Goal Info</h2>
           <div id="goal-period">
-            <label
-              htmlFor="period"
-              style={{ fontSize: "18px", textAlign: "center" }}
-            >
-              Goal Period:{" "}
-            </label>
-            <select
-              name="period"
-              id="period"
-              style={{ fontSize: "18px", textAlign: "center" }}
-              onChange={(e) => setPeriod(e.target.value)}
-            >
-              <option value="Day">Daily</option>
-              <option value="Week">Weekly</option>
-              <option value="Month">Monthly</option>
-            </select>
+            <div id="goal-period-inners">
+              <label
+                htmlFor="period"
+                style={{ fontSize: "18px", textAlign: "center" }}
+              >
+                Goal Period:{" "}
+              </label>
+              <select
+                name="period"
+                id="period"
+                style={{ fontSize: "18px", textAlign: "center" }}
+                onChange={(e) => setPeriod(e.target.value)}
+              >
+                <option value="Day">Daily</option>
+                <option value="Week">Weekly</option>
+                <option value="Month">Monthly</option>
+              </select>
+            </div>
           </div>
           <br />
           <div id="goal-value">
-            <label
-              htmlFor="value"
-              style={{ fontSize: "18px", textAlign: "center" }}
-            >
-              Goal Value:{" "}
-            </label>
-            <input
-              type="number"
-              id="value"
-              name="value"
-              min="1"
-              style={{ fontSize: "18px", textAlign: "center", width: "30%" }}
-            />
-            <select
-              name="unit"
-              id="unit"
-              aria-label="unit"
-              style={{ fontSize: "18px", textAlign: "center" }}
-            >
-              <option value="steps">steps</option>
-              <option value="gallons">gallons</option>
-              <option value="liters">liters</option>
-              <option value="pages">pages</option>
-              <option value="words">words</option>
-              <option value="dollars">dollars</option>
-              <option value="hours">hours</option>
-              <option value="minutes">minutes</option>
-            </select>
-            <label
-              htmlFor="period-selected"
-              style={{ fontSize: "18px", textAlign: "center" }}
-            >
-              {" "}
-              / {periodSelected}{" "}
-            </label>
+            <div id="goal-value-inners">
+              <label
+                htmlFor="value"
+                style={{ fontSize: "18px", textAlign: "center" }}
+              >
+                Goal Value:{" "}
+              </label>
+              <input
+                type="number"
+                id="value"
+                name="value"
+                min="1"
+                max="10000"
+                placeholder="Enter Number"
+                style={{ fontSize: "18px", textAlign: "center", width: "30%" }}
+              />
+              <select
+                name="unit"
+                id="unit"
+                aria-label="unit"
+                style={{ fontSize: "18px", textAlign: "center" }}
+              >
+                <option value="steps">steps</option>
+                <option value="gallons">gallons</option>
+                <option value="liters">liters</option>
+                <option value="pages">pages</option>
+                <option value="words">words</option>
+                <option value="dollars">dollars</option>
+                <option value="hours">hours</option>
+                <option value="minutes">minutes</option>
+              </select>
+              <label
+                htmlFor="period-selected"
+                style={{ fontSize: "18px", textAlign: "center" }}
+              >
+                {" "}
+                / {periodSelected}{" "}
+              </label>
+            </div>
           </div>
           <br />
           <div id="task-days">
@@ -737,6 +747,7 @@ function CreateHabitForm(props) {
         </div>
         <hr style={{ color: "#000000", width: "100%" }} />
         <div id="submit-button-container">
+          <h2 style={{ fontSize: "24px", textAlign: "center" }}>Priority & Term</h2>
           <div id="priority-setting">
             <label
               htmlFor="priority1"
@@ -765,6 +776,7 @@ function CreateHabitForm(props) {
                 type="date"
                 id="start-date-create"
                 name="start-date-create"
+                defaultValue={new Date().toLocaleDateString('en-CA')}
                 style={{ fontSize: "18px", textAlign: "center" }}
               ></input>
             </div>
@@ -779,6 +791,8 @@ function CreateHabitForm(props) {
             </div>
           </div>
           <br />
+          {/* Where button used to be */}
+        </div>
           <button
             type="submit"
             id="submit-button1"
@@ -794,7 +808,6 @@ function CreateHabitForm(props) {
           >
             Create Habit
           </button>
-        </div>
       </form>
       <br />
     </div>
