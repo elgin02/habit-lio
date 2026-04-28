@@ -968,7 +968,7 @@ function HabitCreate({ addHabit }) {
         </div>
       </div>
       <button id="add-btn" title="Add Habit" onClick={handleClick}>
-        <CirclePlus color="black" />
+        <CirclePlus color="black" size={32}/>
       </button>
     </div>
   );

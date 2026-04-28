@@ -9,10 +9,15 @@
 
 /* ── Outer frame: sidebar + chat ── */
 #messages-wrapper {
-   height: 80%;
-   max-height: 400px;
-   min-width: 500px;
-   max-width: 500px;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    /* max-height: 400px;
+    min-width: 500px;
+    max-width: 500px; */
 }
 
 #messages-frame-wrapper {

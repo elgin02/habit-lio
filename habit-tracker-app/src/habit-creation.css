@@ -15,7 +15,8 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: #e8f6ff;
+  /* background-color: #e8f6ff; */
+  background: linear-gradient(#4e54c8, #8f94fb);
   color: black;
   width: 35rem;
   height: 35rem;
@@ -395,7 +396,9 @@
 }
 
 #add-btn {
-  background-color: rgba(255, 255, 255, 0);
+  width: 10em;
+   /* background-color: rgb(203, 203, 203); */
+  /* height: 5em; */
 }
 
 #habit-emoji {

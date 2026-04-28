@@ -381,6 +381,7 @@ function App() {
                     Your Habits
                   </h2>
                   {/* <ul> */}
+                  <div id="habits-display">
                   {habits.map((habit) => (
                     <Habit
                       key={habit.id}
@@ -402,6 +403,7 @@ function App() {
                     //     </button>
                     // </li>
                   ))}
+                  </div>
                   {/* </ul> */}
 
                   <div style={{ padding: "20px" }}>
