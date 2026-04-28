@@ -118,7 +118,16 @@ function AffirmationEditing(props){
 
     const handleSave = async () => {
         const userId = user.uid; // Assuming user object has a uid property
-        await saveAffirmations(userId, affirmations);
+        // Filter out strings that are empty or only whitespace
+        const filteredAffirmations = affirmations.filter(
+            (text) => text && text.trim().length > 0
+        );
+
+        // Save only the non-empty affirmations
+        await saveAffirmations(userId, filteredAffirmations);
+        
+        // Optional: Refresh the local state to reflect the filtered list
+        setAffirmations(filteredAffirmations);
     }
 
     return(
