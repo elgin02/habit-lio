@@ -833,14 +833,14 @@ export const saveProfilePicture = async (uid, file) => {
     // 2. Upload the file
     await uploadBytes(storageRef, file);
 
-    // 3. Get the actual HTTPS URL that a browser can display
+    // 3. Get the download URL
     const downloadURL = await getDownloadURL(storageRef);
 
-    // 4. Update the user document in Firestore with the real URL
+    // 4. Update Firestore (Use merge: true to avoid deleting existing data!)
     const userRef = doc(db, "users", uid);
-    await updateDoc(userRef, {
+    await setDoc(userRef, {
       profilePictureUrl: downloadURL,
-    });
+    }, { merge: true }); // <--- THIS IS ESSENTIAL
 
     return downloadURL;
   } catch (error) {

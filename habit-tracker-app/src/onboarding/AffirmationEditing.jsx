@@ -8,7 +8,7 @@ import{Lightbulb, Minus} from "lucide-react";
 import { generateAffirmations } from "../gemini";
 import DefaultAffirmations from "./DefaultAffirmations";
 
-function AffirmationInput({index, affirmation, setAffirmations}){
+function AffirmationInput({index, affirmation, setAffirmations, remove}){
 
     const [disabled, setDisabled] = useState(false);
     const [affirmationText, setAffirmationText] = useState(affirmation);
@@ -48,7 +48,7 @@ function AffirmationInput({index, affirmation, setAffirmations}){
             <p>(100 Characters or Less)</p>
             <div className="affirmation-input-container">
                 <div className="affirmation-input-inner">
-                    <button><Minus color="#ff0000" /></button>
+                    <button onClick={() => remove(index)}><Minus color="#ff0000" /></button>
                     <div className="affirmation-input-creation">
                         <input type="text" id={`affirmation-${index}`} 
                         name={`affirmation-${index}`} 
@@ -116,6 +116,14 @@ function AffirmationEditing(props){
         console.log(affirmations);
     }
 
+    const removeAffirmation = (index) => {
+        setAffirmations((prevAffirmations) => {
+            const newAffirmations = [...prevAffirmations];
+            newAffirmations.splice(index, 1);
+            return newAffirmations;
+        });
+    }
+
     const handleSave = async () => {
         const userId = user.uid; // Assuming user object has a uid property
         // Filter out strings that are empty or only whitespace
@@ -150,7 +158,8 @@ function AffirmationEditing(props){
                                     <AffirmationInput 
                                         index={index} 
                                         affirmation={affirmation} 
-                                        setAffirmations={setAffirmations} 
+                                        setAffirmations={setAffirmations}
+                                        remove={removeAffirmation} 
                                     />
                                 ))}
                             <br />
