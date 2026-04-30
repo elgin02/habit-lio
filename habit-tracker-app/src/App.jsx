@@ -62,6 +62,7 @@ function App() {
   const loadHabits = async (uid) => {
     if (!uid) return;
     try {
+      chrome.runtime.connect({ name: "popup" });
       const userHabits = await listHabits(uid);
       setHabits(userHabits);
 
