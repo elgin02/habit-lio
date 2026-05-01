@@ -413,13 +413,13 @@ function Priority({ habit, updateHabitField }) {
                 <select
                     name="priority"
                     id="select-priority"
-                    value={habit.priority ?? "none"}
+                    value={habit.priority ?? "1"}
                     onChange={(e) => updateHabitField("priority", e.target.value)}
                 >
-                    <option value="none">No Preference</option>
-                    <option value="low">Low</option>
-                    <option value="medium">Medium</option>
-                    <option value="high">High</option>
+                    <option value="1">No Preference</option>
+                    <option value="2">Low</option>
+                    <option value="3">Medium</option>
+                    <option value="4">High</option>
                 </select>
             </div>
 

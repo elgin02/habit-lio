@@ -760,10 +760,10 @@ function CreateHabitForm(props) {
               id="priority1"
               style={{ fontSize: "18px", textAlign: "center" }}
             >
-              <option value="none">No Preference</option>
-              <option value="low">Low</option>
-              <option value="medium">Medium</option>
-              <option value="high">High</option>
+              <option value="1">No Preference</option>
+              <option value="2">Low</option>
+              <option value="3">Medium</option>
+              <option value="4">High</option>
             </select>
           </div>
           <h2 style={{ fontSize: "20px", textAlign: "center" }}>Habit Term</h2>
