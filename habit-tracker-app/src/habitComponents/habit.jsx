@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { toggleHabitCompletion, isHabitCompletedToday } from "../firestore";
 import '../css/habit.css'
 
-function Habit({habit, uid, loadHabits, onEdit}){
+function Habit({habit, uid, loadHabits, completeHabitEarly, onEdit}){
     const habitName = habit.name ?? "";
     const dynamicFontSize = habitName.length > 15 ? "20px" : "30px";
     let dynamicGoalSize = "22px";
@@ -40,6 +40,15 @@ function Habit({habit, uid, loadHabits, onEdit}){
         setIsToggling(false);
       }
     };
+
+    const notifyHabitCompletion = () => {
+        chrome.runtime.sendMessage({
+          type: "notify",
+          reason: "habitCompletion",
+          message: `You have successfully completed the habit: ${habit.name}!`,
+      });
+    }
+  
   return(
     <div>
       <div className ="habit-created" style={{backgroundColor: habit.color ?? "#FFFFFF"}}>
@@ -48,7 +57,7 @@ function Habit({habit, uid, loadHabits, onEdit}){
           className="habit-checkbox"
           checked={isCompleted}
           onChange={handleToggleCompletion}
-          disabled={isToggling}
+          disabled={isToggling || !habit.isActive} // Disable checkbox while toggling or if habit is not active
           title={isCompleted ? "Mark as incomplete" : "Mark as complete"}
         />
         <h1 style={{fontSize: "64px"}}>{habit.emoji ?? "📝"}&nbsp;</h1>
@@ -59,6 +68,12 @@ function Habit({habit, uid, loadHabits, onEdit}){
             style={{fontSize: dynamicGoalSize, color: "red"}}>
               Goal: {habit.goal.value === "" ? "0" : habit.goal.value}&nbsp; 
               {habit.goal.unit ?? "steps"}&nbsp;/&nbsp;{habit.goal?.period ?? "day"}</h2>
+              <button className="habit-completed" 
+              disabled={!habit.isActive}
+              onClick={() => {completeHabitEarly(habit.id); notifyHabitCompletion(); }}>
+                {habit.isActive ? "Complete Habit Early" : "Habit Completed"}
+              </button>
+              <br />
         </div>
         <div className="habit-streak-edit">
           <h3 className="habit-streak" title="Habit Streak">🔥{habit.streak ?? 0}</h3>
