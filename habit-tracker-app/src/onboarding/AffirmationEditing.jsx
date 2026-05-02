@@ -4,11 +4,11 @@ import "../css/Dropdown.css";
 import { useState } from "react";
 import { useEffect } from "react";
 import { saveAffirmations } from "../second-firestore";
-import{Lightbulb} from "lucide-react";
+import{Lightbulb, Minus} from "lucide-react";
 import { generateAffirmations } from "../gemini";
 import DefaultAffirmations from "./DefaultAffirmations";
 
-function AffirmationInput({index, affirmation, setAffirmations}){
+function AffirmationInput({index, affirmation, setAffirmations, remove}){
 
     const [disabled, setDisabled] = useState(false);
     const [affirmationText, setAffirmationText] = useState(affirmation);
@@ -48,46 +48,50 @@ function AffirmationInput({index, affirmation, setAffirmations}){
             <p>(100 Characters or Less)</p>
             <div className="affirmation-input-container">
                 <div className="affirmation-input-inner">
-                    <input type="text" id={`affirmation-${index}`} name={`affirmation-${index}`} 
-                    placeholder={`Affirmation ${index + 1}`} 
-                    maxlength = "100"
-                    aria-label={`Positive Affirmation ${index + 1}`}
-                    value={affirmationText}
-                    onChange={(e) => {
-                        setAffirmationText(e.target.value);
-                        setAffirmations((prevAffirmations) => {
-                            const newAffirmations = [...prevAffirmations];
-                            newAffirmations[index] = e.target.value;
-                            return newAffirmations;
-                        }
-                        )}}/>
-                    < DefaultAffirmations hidden={!showSelector} 
-                    setAffirmations={setAffirmations}
-                    setShowSelector={setShowSelector}
-                    setAffirmationFromSelector={setAffirmationFromSelector}/>
-                    <div className="dropdown">
-                        {/* <AffirmationSelector hidden={showSelector} 
-                        affirmations={affirmationText} 
-                        setAffirmations={setAffirmationText}/> */}
+                    <button onClick={() => remove(index)}><Minus color="#ff0000" /></button>
+                    <div className="affirmation-input-creation">
+                        <input type="text" id={`affirmation-${index}`} 
+                        name={`affirmation-${index}`} 
+                        placeholder={`Affirmation ${index + 1}`} 
+                        maxlength = "100"
+                        aria-label={`Positive Affirmation ${index + 1}`}
+                        value={affirmationText}
+                        onChange={(e) => {
+                            setAffirmationText(e.target.value);
+                            setAffirmations((prevAffirmations) => {
+                                const newAffirmations = [...prevAffirmations];
+                                newAffirmations[index] = e.target.value;
+                                return newAffirmations;
+                            }
+                            )}}/>
+                        < DefaultAffirmations hidden={!showSelector} 
+                        setAffirmations={setAffirmations}
+                        setShowSelector={setShowSelector}
+                        setAffirmationFromSelector={setAffirmationFromSelector}/>
+                        <div className="dropdown">
+                            {/* <AffirmationSelector hidden={showSelector} 
+                            affirmations={affirmationText} 
+                            setAffirmations={setAffirmationText}/> */}
 
-                        <button id="generate-affirmation-btn" 
-                        className="dropbtn"
-                        title="Generate Affirmation" 
-                        disabled={disabled}>
-                            <Lightbulb />
-                            </button>
-                        <div className="dropdown-content">
-                            <a href="#"
-                             onClick={() => setShowSelector(!showSelector)}>
-                                Select an Affirmation🧑‍💻
+                            <button id="generate-affirmation-btn" 
+                            className="dropbtn"
+                            title="Generate Affirmation" 
+                            disabled={disabled}>
+                                <Lightbulb />
+                                </button>
+                            <div className="dropdown-content">
+                                <a href="#"
+                                onClick={() => setShowSelector(!showSelector)}>
+                                    Select an Affirmation🧑‍💻
+                                    </a>
+                                <a href="#" onClick={
+                                    () => {
+                                        generateAffirmation();
+                                    }
+                                }>
+                                    Generate an Affirmation💭
                                 </a>
-                            <a href="#" onClick={
-                                () => {
-                                    generateAffirmation();
-                                }
-                            }>
-                                Generate an Affirmation💭
-                            </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -112,9 +116,26 @@ function AffirmationEditing(props){
         console.log(affirmations);
     }
 
+    const removeAffirmation = (index) => {
+        setAffirmations((prevAffirmations) => {
+            const newAffirmations = [...prevAffirmations];
+            newAffirmations.splice(index, 1);
+            return newAffirmations;
+        });
+    }
+
     const handleSave = async () => {
         const userId = user.uid; // Assuming user object has a uid property
-        await saveAffirmations(userId, affirmations);
+        // Filter out strings that are empty or only whitespace
+        const filteredAffirmations = affirmations.filter(
+            (text) => text && text.trim().length > 0
+        );
+
+        // Save only the non-empty affirmations
+        await saveAffirmations(userId, filteredAffirmations);
+        
+        // Optional: Refresh the local state to reflect the filtered list
+        setAffirmations(filteredAffirmations);
     }
 
     return(
@@ -137,7 +158,8 @@ function AffirmationEditing(props){
                                     <AffirmationInput 
                                         index={index} 
                                         affirmation={affirmation} 
-                                        setAffirmations={setAffirmations} 
+                                        setAffirmations={setAffirmations}
+                                        remove={removeAffirmation} 
                                     />
                                 ))}
                             <br />

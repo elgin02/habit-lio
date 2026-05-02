@@ -31,9 +31,14 @@ function Menu({ onHomeClick, addHabit, setShowFriendsPage, setShowMessagesPage, 
           <House color="black" />{" "}
         </button>{" "}
         <span className="divider"></span>
-        <HabitCreate
-          addHabit={addHabit}
-        /> <span className="divider"></span>{" "}
+        <button
+          id="profile-btn"
+          title="Profile"
+          onClick={() => setShowProfile(true)}
+        >
+          <CircleUser color="black" />
+        </button>
+     <span className="divider"></span>{" "}
         <button
           id="badges-btn"
           title="Badges"
@@ -42,13 +47,9 @@ function Menu({ onHomeClick, addHabit, setShowFriendsPage, setShowMessagesPage, 
           <Medal color="black" />
         </button>
         <span className="divider" />
-        <button
-          id="profile-btn"
-          title="Profile"
-          onClick={() => setShowProfile(true)}
-        >
-          <CircleUser color="black" />
-        </button>
+            <HabitCreate
+          addHabit={addHabit}
+        />
         <span className="divider" />
         <button
           id="friends-btn"

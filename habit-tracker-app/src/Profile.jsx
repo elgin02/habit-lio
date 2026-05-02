@@ -145,10 +145,10 @@ function Profile({ uid, onClose }) {
       setTotalHabits(fetched.length);
       setAvailableYears(Array.from(years).sort((a, b) => b - a));
 
-      const priorities = ["none", "low", "medium", "high"];
+      const priorities = ["1", "2", "3", "4"];
       const priorityCounts = priorities.map(
         (p) =>
-          fetched.filter((h) => (h.priority || "none").toLowerCase() === p)
+          fetched.filter((h) => (h.priority || "1") === p)
             .length,
       );
       setPieData({

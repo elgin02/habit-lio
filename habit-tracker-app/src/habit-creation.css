@@ -15,7 +15,8 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: #e8f6ff;
+  /* background-color: #e8f6ff; */
+  background: linear-gradient(#4e54c8, #8f94fb);
   color: black;
   width: 35rem;
   height: 35rem;
@@ -49,6 +50,19 @@
 
 #back-button:hover {
   background-color: #c0c0c0;
+}
+
+#submit-button-container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  background-color: #fffefe;
+  outline: 0.1px solid black;
+  border-radius: 10px;
+  width: 100%;
+  margin: 10px;
 }
 
 #submit-button1 {
@@ -149,8 +163,9 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  background-color: #ffffff;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  /* background-color: #ffffff; */
+  background-color: transparent;
+  /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
   width: 95%;
   border-radius: 25px;
   overflow-y: auto;
@@ -205,7 +220,7 @@
   text-align: center;
   color: black;
   /* border-radius: 40px; */
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  /* box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); */
   background-color: rgba(0, 0, 0, 0);
   resize: none;
   height: 120px;
@@ -213,9 +228,31 @@
 }
 
 #habit-form-first-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+
+  background-color: #fffefe;
+  outline: 0.1px solid black;
+  border-radius: 10px;
+  width: 85%;
+  margin: 10px;
+}
+
+.line {
+  background-color: black;
+  height: 1px;
+  width: 90%;
+  flex-shrink: 0;
+}
+
+#habit-form-header{
+  display: flex;
+  justify-content: left;
+  align-items: flex-start;
+  margin-top: 1rem;
+  width: 88%;
 }
 
 #habit-form-second-row {
@@ -228,10 +265,12 @@
 #habit-type-options-created {
   /* display: grid;
     grid-template-columns: 1fr 1fr; */
-  background-color: #d9d9d9;
+  background-color: #ffffff;
+  outline: 0.1px solid black;
   width: 30em;
   height: 50px;
   border-radius: 40px;
+  
 }
 
 .habit-type-option1 {
@@ -260,7 +299,58 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: flex-start;
+
+  background-color: #fffefe;
+  outline: 0.1px solid black;
+  border-radius: 10px;
+  width: 100%;
+  margin: 10px;
+}
+
+#goal-period {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
   justify-content: center;
+}
+
+#goal-period-inners{
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: space-around;
+  width: 50%;
+  /* justify-content: space-around; */
+}
+
+#goal-value {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+#goal-value-inners{
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: space-around;
+  width: 100%;
+}
+
+#value{
+  background-color: white;
+  color: black;
+  border-radius: 20px;
+  border: 1px solid #767676;
+}
+
+#unit{
+  background-color: white;
+  color: black;
+  border-radius: 20px;
+  border: 1px solid #767676;
 }
 
 #task-days-select {
@@ -269,6 +359,19 @@
   justify-content: center;
   /* width: 3em; */
   border: 1px solid black;
+}
+
+#habit-form-fourth-row{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  background-color: #fffefe;
+  outline: 0.1px solid black;
+  border-radius: 10px;
+  width: 100%;
+  margin: 10px;
 }
 
 #reminder-message {
@@ -293,7 +396,9 @@
 }
 
 #add-btn {
-  background-color: rgba(255, 255, 255, 0);
+  width: 10em;
+   /* background-color: rgb(203, 203, 203); */
+  /* height: 5em; */
 }
 
 #habit-emoji {

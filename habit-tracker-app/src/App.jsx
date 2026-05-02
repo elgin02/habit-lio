@@ -20,6 +20,8 @@ import {
   getUserInfo
 } from "./firestore";
 
+import { completeHabit } from "./second-firestore";
+
 // import{
 //   loadAffirmations
 // } from "./second-firestore";
@@ -34,6 +36,7 @@ import Habit from "./habitComponents/habit";
 import HabitDetails from "./HabitDetails";
 import FriendsPage from "./FriendsPage";
 import Messages from "./Messages";
+import HabitFilter from "./HabitFilter";
 import { AuthContext } from "./AuthContext";
 import Onboarding from "./onboarding/Onboarding.jsx";
 import Affirmation from "./onboarding/affirmation.jsx";
@@ -42,6 +45,7 @@ import Affirmation from "./onboarding/affirmation.jsx";
 function App() {
   const [user, setUser] = useState(null);
   const [habits, setHabits] = useState([]);
+  const [sortedHabits, setSortedHabits] = useState([]);
   const [newHabitTitle, setNewHabitTitle] = useState("");
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
@@ -56,12 +60,15 @@ function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [alreadyOnboarded, setAlreadyOnboarded] = useState(false);
   const [loaded, setLoaded] = useState(false);
+  const [filter, setFilter] = useState("incomplete");
+  const [secondaryFilter, setSecondaryFilter] = useState(null);
 
   // Load in the habits for the user,
   // called after login and after edits/deletes to refresh the habit list
   const loadHabits = async (uid) => {
     if (!uid) return;
     try {
+      chrome.runtime.connect({ name: "popup" });
       const userHabits = await listHabits(uid);
       setHabits(userHabits);
 
@@ -249,6 +256,48 @@ function App() {
     }
   };
 
+  const completeHabitEarly = async (habitId) => {
+    if (!user) return;
+    try {
+      await completeHabit(user.uid, habitId);
+      await loadHabits(user.uid);
+    }
+    catch (error) {
+      console.error("Error completing habit:", error);
+    }
+  };
+
+
+  // Modify habits display based on filter selection
+  useEffect(() => {
+    if (filter === "priority") {
+      if(secondaryFilter === "priority-asc" || secondaryFilter === null) {
+          setSortedHabits([...habits].sort((a, b) => a.priority - b.priority));
+      } else if (secondaryFilter === "priority-desc") {
+        setSortedHabits([...habits].sort((a, b) => b.priority - a.priority));
+      }
+    } else if(filter === "completed"){
+      const sorted = [...habits].filter(habit => !habit.isActive);
+      setSortedHabits(sorted);
+    } else if(filter === "incomplete"){
+      const sorted = [...habits].filter(habit => habit.isActive);
+      setSortedHabits(sorted);
+    } else if(filter === "alpha") { // alphabetical filters
+      console.log("Sorting alphabetically with secondary filter:", secondaryFilter);
+        if (secondaryFilter === "alpha-asc" || secondaryFilter === null) {
+            const sorted = [...habits].sort((a, b) => 
+              (a.name || "").localeCompare(b.name || "")
+            );
+            setSortedHabits(sorted);
+        } else if (secondaryFilter === "alpha-desc") {
+            const sorted = [...habits].sort((a, b) => 
+              (b.name || "").localeCompare(a.name || "")
+            );
+            setSortedHabits(sorted);
+        }
+    }
+  }, [filter, secondaryFilter, habits]);
+
 
   const [showPopup, setShowPopup] = useState(false);
   //  const [uid, setUid] = useState("USER_ID_FROM_FIREBASE"); // This is your existing UID
@@ -380,28 +429,62 @@ function App() {
                   <h2 style={{ fontSize: "28px", color: "black" }}>
                     Your Habits
                   </h2>
+                  {/* Habit Filter */}
+                    <HabitFilter filter={filter} setFilter={setFilter} 
+                    secondaryFilter={secondaryFilter} 
+                    setSecondaryFilter={setSecondaryFilter} />
+                    <br />
                   {/* <ul> */}
-                  {habits.map((habit) => (
-                    <Habit
-                      key={habit.id}
-                      habit={habit}
-                      uid={user.uid}
-                      loadHabits={loadHabits}
-                      onEdit={() => setSelectedHabit(habit)}
-                    />
-                    // <li key={habit.id}>
-                    //     <div>
-                    //         <h3>{habit.title}</h3>
-                    //         {habit.description && <p>{habit.description}</p>}
-                    //         <span>{habit.frequency}</span>
-                    //     </div>
-                    //     <button
-                    //         onClick={() => handleDeleteHabit(habit.id)}
-                    //     >
-                    //         Delete
-                    //     </button>
-                    // </li>
-                  ))}
+                  <div id="habits-display">
+                    {/* Default Filter */}
+                    {(filter === "all") && (
+                      <div>
+                        {habits.map((habit) => (
+                          <Habit
+                            key={habit.id}
+                            habit={habit}
+                            uid={user.uid}
+                            loadHabits={loadHabits}
+                            completeHabitEarly={completeHabitEarly}
+                            onEdit={() => setSelectedHabit(habit)}
+                          />
+
+                        ))}
+                      </div>
+                    )}
+                    {/* Priority Filter */}
+                    {filter !== "all" && (
+                      <div>
+                          {sortedHabits.map((habit) => (
+                            <Habit
+                              key={habit.id}
+                              habit={habit}
+                              uid={user.uid}
+                              loadHabits={loadHabits}
+                              completeHabitEarly={completeHabitEarly}
+                              onEdit={() => setSelectedHabit(habit)}
+                            />
+                          ))}
+                      </div>
+                    )}
+
+                    {/* Completed or Incompleted Filter */}
+                    {/* {filter === "completed" || filter === "incomplete" 
+                    || filter === "alpha" && (
+                      <div>
+                          {sortedHabits.map((habit) => (
+                            <Habit
+                              key={habit.id}
+                              habit={habit}
+                              uid={user.uid}
+                              loadHabits={loadHabits}
+                              onEdit={() => setSelectedHabit(habit)}
+                            />
+                          ))}
+                      </div> 
+                    )} */}
+
+                  </div>
                   {/* </ul> */}
 
                   <div style={{ padding: "20px" }}>

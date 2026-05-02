@@ -38,3 +38,16 @@ export const saveAffirmations = async (userId, affirmationsArray) => {
     console.error("Error updating affirmations:", error);
   }
 };
+
+export const completeHabit = async (userId, habitId) => {
+  const habitDocRef = doc(db, "users", userId, "habits", habitId);
+  try {
+    await updateDoc(habitDocRef, {
+      isActive: false,
+      completedAt: serverTimestamp(),
+    });
+    console.log("Habit marked as completed!");
+  } catch (error) {
+    console.error("Error marking habit as completed:", error);
+  }
+};

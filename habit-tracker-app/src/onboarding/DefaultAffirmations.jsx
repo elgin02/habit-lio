@@ -39,7 +39,7 @@ function DefaultAffirmations({hidden,setAffirmations,
 
     return(
         <div>
-            <div id="default-affirmation-container" 
+            <div className="default-affirmation-container" 
             hidden={hidePopup}>
                 <div
             id="back-button-default-affirmation"
@@ -47,11 +47,11 @@ function DefaultAffirmations({hidden,setAffirmations,
                 setShowSelector(false);
             }}
           ><ChevronLeft size={48} /></div>
-                <div id="default-affirmation-popup">
+                <div className="default-affirmation-popup">
                     <h2>Default Affirmations</h2>
                     <p>Choose from these default affirmations to add to your list:</p>
-                    <div id="default-affirmation-list-container">
-                        <div id="default-affirmation-list">
+                    <div className="default-affirmation-list-container">
+                        <div className="default-affirmation-list">
                             {defaultAffirmations.map((affirmation, index) => (
                                 <div className="default-affirmation-item" key={index}>
                                     <div className="default-affirmation-item-inner">

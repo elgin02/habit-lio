@@ -11,7 +11,7 @@ import {
   saveProfilePicture,
 } from "../firestore.js";
 import { generateAffirmations } from "../gemini";
-import { Lightbulb } from "lucide-react";
+import { Lightbulb, Minus } from "lucide-react";
 import DefaultAffirmationsOnboarding from "./DefaultAffirmationsOnboarding";
 
 function Page1({ currentPage, setCurrentPage, isGoogleUser }) {
@@ -249,7 +249,7 @@ function Page4({ currentPage, setCurrentPage, setUserInfo }) {
 
 
 
-function AffirmationInput({ index, affirmation, setAffirmations }) {
+function AffirmationInput({ index, affirmation, setAffirmations, remove}) {
   const [disabled, setDisabled] = useState(false);
   const [affirmationText, setAffirmationText] = useState(affirmation);
   const [showSelector, setShowSelector] = useState(false);
@@ -289,6 +289,7 @@ function AffirmationInput({ index, affirmation, setAffirmations }) {
       <p>(100 Characters or Less)</p>
       <div className="affirmation-input-container-onboarding">
         <div className="affirmation-input-inner-onboarding">
+          <button onClick={() => remove(index)}><Minus color="#ff0000" /></button>
           <input
             type="text"
             id={`affirmation-${index}`}
@@ -348,6 +349,32 @@ function Page5({ currentPage, setCurrentPage, setUserInfo }) {
   const [pageName, setPageName] = useState("Page5");
   const [affirmations, setAffirmations] = useState([""]);
 
+  const removeAffirmation = (index) => {
+        setAffirmations((prevAffirmations) => {
+            const newAffirmations = [...prevAffirmations];
+            newAffirmations.splice(index, 1);
+            return newAffirmations;
+        });
+    }
+
+      const handleSave = () => {
+          // Filter out strings that are empty or only whitespace
+          const filteredAffirmations = affirmations.filter(
+              (text) => text && text.trim().length > 0
+          );
+          
+          // // Optional: Refresh the local state to reflect the filtered list
+          // setAffirmations(filteredAffirmations);
+
+          //  Look into how to update affirmations
+          setUserInfo((prevUserInfo) => ({
+                ...prevUserInfo,
+                affirmations: filteredAffirmations,
+          }));
+
+          setCurrentPage("Page6"); 
+      }
+
   return (
     <div>
       <div className="onboarding-wrapper" hidden={currentPage !== pageName}>
@@ -366,6 +393,7 @@ function Page5({ currentPage, setCurrentPage, setUserInfo }) {
                 index={index}
                 affirmation={affirmation}
                 setAffirmations={setAffirmations}
+                remove={removeAffirmation}
               />
             ))}
           </div>
@@ -381,13 +409,7 @@ function Page5({ currentPage, setCurrentPage, setUserInfo }) {
           <br />
           <button
             className="continue-btn"
-            onClick={() => {
-              setUserInfo((prevUserInfo) => ({
-                ...prevUserInfo,
-                affirmations: affirmations,
-              }));
-              setCurrentPage("Page6");
-            }}
+            onClick={() => {handleSave()}}
           >
             Continue
           </button>
