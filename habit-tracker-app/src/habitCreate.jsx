@@ -83,8 +83,10 @@ function HabitWindow(props) {
   return (
     <div>
       <div id="habit-window">
-        <h1 id="habitCategory">{categorySelected}</h1>
-        <p id="category-description">{descriptions[categorySelected]}</p>
+        <h1 id="habitCategory" style={{ color: "white" }}>
+          {categorySelected}
+        </h1>
+        <p id="category-description" style={{color: "white"}}>{descriptions[categorySelected]}</p>
         <div
           hidden={categorySelected !== "Popular"}
           className="custom-habit-form"
@@ -839,9 +841,11 @@ function HabitCreate({ addHabit }) {
     var availableCategories = document.getElementsByClassName("habit-type");
     for (var i = 0; i < availableCategories.length; i++) {
       if (availableCategories[i].title === categoryName) {
-        availableCategories[i].style.backgroundColor = "#b9b7b7";
+        availableCategories[i].style.backgroundColor = "#493486";
+        availableCategories[i].style.boxShadow = "0px 4px 10px rgba(73, 52, 134, 0.5)";
       } else {
         availableCategories[i].style.backgroundColor = "#ffffff";
+        availableCategories[i].style.boxShadow = "none";
       }
     }
   };
@@ -869,8 +873,8 @@ function HabitCreate({ addHabit }) {
                     depending on whether custom was selected or button was clicked */}
           {category !== "Custom" ? (
             <div>
-              <h2 id="habit-title" style={{ fontSize: "36px", color: "black" }}>
-                Select a Habit to Track:
+              <h2 id="habit-title" style={{ fontSize: "36px", color: "white" }}>
+                Select a Habit to Track
               </h2>
               <div id="habit-layout">
                 <div id="habit-types">
@@ -967,7 +971,7 @@ function HabitCreate({ addHabit }) {
           )}
         </div>
       </div>
-      <button id="add-btn" title="Add Habit" onClick={handleClick}>
+      <button className="menu-btns" id="add-btn" title="Add Habit" onClick={handleClick}>
         <CirclePlus color="black" size={32}/>
       </button>
     </div>

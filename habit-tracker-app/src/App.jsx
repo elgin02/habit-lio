@@ -40,6 +40,8 @@ import HabitFilter from "./HabitFilter";
 import { AuthContext } from "./AuthContext";
 import Onboarding from "./onboarding/Onboarding.jsx";
 import Affirmation from "./onboarding/affirmation.jsx";
+import AffirmationEditing from "./onboarding/AffirmationEditing.jsx";
+import ForgotPassword from "./additionalLogin/ForgotPassword.jsx";
 // import Messages from "./Messages.jsx";
 
 function App() {
@@ -51,6 +53,8 @@ function App() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
+  const [forgotPassword, setForgotPassword] = useState(false);
+  const [resetPassword, setResetPassword] = useState(false);
   const [greetUsername, setGreetUsername] = useState(false);
   const [affirmations, setAffirmations] = useState([]);
 
@@ -62,6 +66,7 @@ function App() {
   const [loaded, setLoaded] = useState(false);
   const [filter, setFilter] = useState("incomplete");
   const [secondaryFilter, setSecondaryFilter] = useState(null);
+  const [showAffirmationEditing, setShowAffirmationEditing] = useState(false);
 
   // Load in the habits for the user,
   // called after login and after edits/deletes to refresh the habit list
@@ -87,6 +92,33 @@ function App() {
       console.log("Affirmations: ", getAffirmations);
       setLoaded(true);
 
+      // Prevent duplicate alarms by clearing all existing alarms before setting new ones
+      chrome.alarms.clearAll();
+
+      // // We will load the alarms here.
+      userHabits.forEach((habit) => {
+      if (habit.reminder.activated) {
+          const [hours, minutes] = habit.reminder.time.split(":");
+          const now = new Date();
+          const alarmTime = new Date();
+          alarmTime.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+
+          // If time already passed today, set for tomorrow
+          if (alarmTime <= now) {
+            alarmTime.setDate(now.getDate() + 1);
+          }
+
+          const stringifyName =
+            habit.id + "|" + habit.reminder.message + "|" + habit.name; // Combine message and habit name for later use
+          // Schedule repeating alarm every 24 hours
+          // Switch back to createdHabit.name if it doesn't work
+          chrome.alarms.create(stringifyName, {
+            when: alarmTime.getTime(),
+            periodInMinutes: 1440, // 24 hours
+          });
+        }
+      });
+
     } catch (error) {
       console.error("Error loading habits:", error);
     }
@@ -100,6 +132,7 @@ function App() {
         loadHabits(currentUser.uid);
         // console.log("Username set: ", username);
       } else {
+        chrome.alarms.clearAll(); // clear alarms on logout to prevent errors
         setHabits([]);
         setLoaded(true);
       }
@@ -192,6 +225,7 @@ function App() {
       if (isSignUp) {
         if (err.code === "auth/invalid-credential") {
           setAuthError("No account found with these credentials.");
+          setForgotPassword(true);
         } else {
           setAuthError("Sign up failed. " + err.code);
         }
@@ -271,10 +305,11 @@ function App() {
   // Modify habits display based on filter selection
   useEffect(() => {
     if (filter === "priority") {
+      const activeHabits = [...habits].filter(habit => habit.isActive);
       if(secondaryFilter === "priority-asc" || secondaryFilter === null) {
-          setSortedHabits([...habits].sort((a, b) => a.priority - b.priority));
+          setSortedHabits(activeHabits.sort((a, b) => a.priority - b.priority));
       } else if (secondaryFilter === "priority-desc") {
-        setSortedHabits([...habits].sort((a, b) => b.priority - a.priority));
+        setSortedHabits(activeHabits.sort((a, b) => b.priority - a.priority));
       }
     } else if(filter === "completed"){
       const sorted = [...habits].filter(habit => !habit.isActive);
@@ -296,6 +331,19 @@ function App() {
             setSortedHabits(sorted);
         }
     }
+
+    // Check if habit's end date has passed.
+      const now = new Date();
+      const updatedHabits = habits.map(habit => {
+        if (habit.isActive && habit.endDate) {
+          const endDate = new Date(habit.endDate);
+          if (now > endDate) {
+            // If current date is past the end date, mark habit as inactive
+            completeHabitEarly(habit.id);
+            return { ...habit, isActive: false }; // Update local state immediately
+          }
+        }
+      });
   }, [filter, secondaryFilter, habits]);
 
 
@@ -341,7 +389,9 @@ function App() {
                   setShowFriendsPage={setShowFriendsPage}
                   setShowMessagesPage={setShowMessagesPage}
                 />
-                <p hidden={showFriendsPage || showMessagesPage} style={{ fontSize: "20px", color: "black" }}>
+                <p 
+                id="greeting-home"
+                hidden={showFriendsPage || showMessagesPage}>
                   Welcome, <strong>{(greetUsername && username) ? username : user?.email}</strong>!
                 </p>
 
@@ -353,8 +403,12 @@ function App() {
                   }}
                 >
                   <Affirmation user={user} 
-                  affirmations={affirmations} getAffirmations={getAffirmations} />
+                  affirmations={affirmations} getAffirmations={getAffirmations} 
+                  setShowAffirmationEditing={setShowAffirmationEditing}/>
                 </div>
+
+                  <AffirmationEditing user={user} visible={showAffirmationEditing} 
+                  setVisible={setShowAffirmationEditing} affirmations={affirmations} />
 
                 {showFriendsPage && (
                   <div>
@@ -426,7 +480,7 @@ function App() {
                 )}
                 <div hidden={showFriendsPage || showMessagesPage}>
                   {/* // Display habits */}
-                  <h2 style={{ fontSize: "28px", color: "black" }}>
+                  <h2 style={{ fontSize: "28px", color: "white" }}>
                     Your Habits
                   </h2>
                   {/* Habit Filter */}
@@ -468,22 +522,6 @@ function App() {
                       </div>
                     )}
 
-                    {/* Completed or Incompleted Filter */}
-                    {/* {filter === "completed" || filter === "incomplete" 
-                    || filter === "alpha" && (
-                      <div>
-                          {sortedHabits.map((habit) => (
-                            <Habit
-                              key={habit.id}
-                              habit={habit}
-                              uid={user.uid}
-                              loadHabits={loadHabits}
-                              onEdit={() => setSelectedHabit(habit)}
-                            />
-                          ))}
-                      </div> 
-                    )} */}
-
                   </div>
                   {/* </ul> */}
 
@@ -507,6 +545,7 @@ function App() {
         ) : (
           // sign in/sign up
           <div>
+            < ForgotPassword visible={resetPassword} changeVisible={setResetPassword} />
             {!loaded ? (
               <div className="loading-container">
                 <div className="loading-bar" >
@@ -514,7 +553,7 @@ function App() {
               </div>
             ) : (
             <div id="login-container">
-              <h1>{isSignUp ? "Welcome Back" : "Create Account"}</h1>
+              <h1 id="login-title">{isSignUp ? "Welcome Back" : "Create Account"}</h1>
               <h2 id="login-subtitle">
                 {isSignUp ? "Sign in to Habit.lio" : "Join Habit.lio"}
               </h2>
@@ -553,7 +592,17 @@ function App() {
                     {passwordVisible ? <EyeOff /> : <Eye />}
                   </button>
                 </div>
-                <br />
+                <span id="change-account" 
+                style={{ display: forgotPassword ? "block" : "none", marginBottom: "10px" }}>
+                Forgot your password?
+                &nbsp;
+                <a style={{fontSize: "16px"}} 
+                href="#" onClick={() => setResetPassword(true)}>
+                  Reset it here
+                </a>
+              </span>
+              <br />
+              
                 <button id="login" type="submit">
                   {isSignUp ? "Sign In" : "Sign Up"}
                 </button>
@@ -569,12 +618,18 @@ function App() {
                   ? "Don't have an account?"
                   : "Already have an account?"}
                 &nbsp;
-                <a href="#" onClick={() => setIsSignUp(!isSignUp)}>
+                <a href="#" 
+                onClick={() => {setIsSignUp(!isSignUp); 
+                setAuthError(""); 
+                setForgotPassword(false);
+                setEmail("");
+                setPassword("");
+                 }}>
                   {isSignUp ? "Sign Up" : "Sign In"}
                 </a>
               </span>
               <br />
-              <script type="module" src="login.js"></script>
+              {/* <script type="module" src="login.js"></script> */}
             </div>
             )}
           </div>

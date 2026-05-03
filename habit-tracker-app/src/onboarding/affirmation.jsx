@@ -3,7 +3,7 @@ import "../css/Affirmation.css";
 import { useEffect, useState } from "react";
 import AffirmationEditing from "./AffirmationEditing";
 
-function Affirmation({ user, affirmations, getAffirmations }) {
+function Affirmation({ user, affirmations, getAffirmations, setShowAffirmationEditing }) {
   const [userOpened, setuserOpened] = useState(user);
   const [visible, setVisible] = useState(false);
   const [affirmationsList, setAffirmationsList] = useState(affirmations || []);
@@ -15,8 +15,6 @@ function Affirmation({ user, affirmations, getAffirmations }) {
   
   return (
     <div id="today-affirmation-container">
-        <AffirmationEditing user={userOpened} visible={visible} 
-        setVisible={setVisible} affirmations={affirmationsList} />
         <h2>Today's Affirmation:</h2>
         {affirmationsList.length === 0 ? (
             <p>No affirmations found. Please create some affirmations to see them here!</p>
@@ -24,7 +22,7 @@ function Affirmation({ user, affirmations, getAffirmations }) {
             <p>{affirmationsList[Math.floor(Math.random() * affirmationsList.length)]}</p>
         )}
         <button id="edit-affirmations" 
-        onClick={() => {setVisible(!visible); getAffirmations();}}>
+        onClick={() => {setShowAffirmationEditing(true); getAffirmations();}}>
           Edit Affirmations✏️
         </button>
     </div>
