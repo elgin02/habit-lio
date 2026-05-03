@@ -107,12 +107,12 @@ button {
 }
 
 .menu-btns:hover {
-  background-color: rgb(90, 50, 183) !important;
+  background-color: rgb(214, 214, 214) !important;
 }
 
 #greeting-home{
   /* font-family: monospace; */
-  font-size: 3vw;
+  font-size: 4vw;
   text-wrap: pretty;
   /* color: black; */
   color: white;

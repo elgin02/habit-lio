@@ -175,21 +175,30 @@ function CheckBoxDay({ name, setDaysSelected, daysSelected, updateGoalField }) {
 // specific days of the month, or entering a number of days per week/month.
 function SelectTaskDays(props) {
 
-    const isError = props.daysSelected.length === 0;
-    props.setDisabled(props.mode === "specific_days" && isError);
+    // const isError = props.daysSelected.length === 0;
+    // props.setDisabled(props.mode === "specific_days" && isError);
 
-    const isError2 = props.daysInMonthSelected.length === 0;
-    props.setDisabled(props.mode === "specific_month_days" && isError2);
+    // const isError2 = props.daysInMonthSelected.length === 0;
+    // props.setDisabled(props.mode === "specific_month_days" && isError2);
+    let isError;
+    if(props.mode === "specific_days"){
+        isError = props.daysSelected.length === 0;
+        props.setDisabled(isError);
+    }
+    if(props.mode === "specific_month_days"){
+        isError = props.daysInMonthSelected.length === 0;
+        props.setDisabled(isError);
+    }
     // Ensure days selected is refresh.
     // const refreshNeeded = props.mode === "specific_month_days" && props.daysSelected.length > 0;
     // props.setDaysSelected(refreshNeeded ? [] : props.daysSelected);
-    console.log("DAYS:" + props.daysSelected);
+    // console.log("DAYS:" + props.daysSelected);
     return(
         <div>
             {props.mode === "specific_month_days" && (
                 <div id="task-days-select">
                     <p className="days-error" 
-                    style={{color: "red", fontSize: "14px" }} hidden={!isError2}>
+                    style={{color: "red", fontSize: "14px" }} hidden={!isError}>
                         Error: Please select at least one day.
                     </p>
                     <CalendarEdit daysInMonthSelected={props.daysInMonthSelected} 
@@ -306,6 +315,12 @@ function GoalInfo({ habit, updateGoalField, setDisabled }) {
                     id="value-input"
                     name="value"
                     min="1"
+                    max="10000"
+                    onInput={(e) => {
+                        const value = parseInt(e.target.value) || 1;
+                        if (value > 10000) e.target.value = 10000;
+                        if (value < 1) e.target.value = 1;
+                    }}
                     value={habit.goal?.value ?? 1}
                     onChange={(e) => updateGoalField("value", Number(e.target.value))}
                 />

@@ -502,11 +502,16 @@ function App() {
                             completeHabitEarly={completeHabitEarly}
                             onEdit={() => setSelectedHabit(habit)}
                           />
-
+                        
                         ))}
+                        {habits.length === 0 && (
+                          <p style={{ color: "white", fontSize: "16px" }}>
+                            No habits yet. Create one to get started!
+                          </p>
+                        )}
                       </div>
                     )}
-                    {/* Priority Filter */}
+                    {/* All other filters Filter */}
                     {filter !== "all" && (
                       <div>
                           {sortedHabits.map((habit) => (
@@ -519,6 +524,12 @@ function App() {
                               onEdit={() => setSelectedHabit(habit)}
                             />
                           ))}
+                        
+                        {sortedHabits.length === 0 && (
+                          <p style={{ color: "white", fontSize: "16px" }}>
+                            No habits yet. Create one to get started!
+                          </p>
+                        )}
                       </div>
                     )}
 
@@ -533,9 +544,6 @@ function App() {
                       />
                     )}
                   </div>
-                  {habits.length === 0 && (
-                    <p>No habits yet. Create one to get started!</p>
-                  )}
                 </div>
                 <br />
               </div>

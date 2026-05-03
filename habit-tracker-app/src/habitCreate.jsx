@@ -301,12 +301,15 @@ function CheckBoxDay({ name, setDaysSelected }) {
 
 function SelectTaskDays(props) {
   // const [error, showError] = useState(false);
-  const isError = props.daysSelected.length === 0;
-  props.setClicked(props.mode === "specific_days" && isError);
-
-  const isError2 = props.daysInMonthSelected.length === 0;
-  props.setClicked(props.mode === "specific_month_days" && isError2);
-
+  let isError;
+  if(props.mode === "specific_days"){
+    isError = props.daysSelected.length === 0;
+    props.setClicked(isError);
+  }
+  if(props.mode === "specific_month_days"){
+    isError = props.daysInMonthSelected.length === 0;
+    props.setClicked(isError);
+}
   console.log("DAYS:" + props.daysSelected);
   return (
     <div>
@@ -315,7 +318,7 @@ function SelectTaskDays(props) {
           <p
             className="days-error"
             style={{ color: "red", fontSize: "14px" }}
-            hidden={!isError2}
+            hidden={!isError}
           >
             Error: Please select at least one day.
           </p>
@@ -638,6 +641,11 @@ function CreateHabitForm(props) {
                 name="value"
                 min="1"
                 max="10000"
+                onInput={(e) => {
+                        const value = parseInt(e.target.value) || 1;
+                        if (value > 10000) e.target.value = 10000;
+                        if (value < 1) e.target.value = 1;
+                 }}
                 placeholder="Enter Number"
                 style={{ fontSize: "18px", textAlign: "center", width: "30%" }}
               />

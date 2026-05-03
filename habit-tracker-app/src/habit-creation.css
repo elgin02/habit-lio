@@ -59,7 +59,7 @@
   justify-content: center;
 
   background-color: #fffefe;
-  outline: 0.1px solid black;
+  box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.5);
   border-radius: 10px;
   width: 100%;
   margin: 10px;
@@ -67,11 +67,20 @@
 
 #submit-button1 {
   border: none;
+  background-color: #ffffff !important;
   border-radius: 5px;
+  width: 10em;
+  height: 3em;
+  font-size: 12px;
   cursor: pointer;
+  &:hover {
+    background-color: #d9d9d9;
+    transform: scale(1.05);
+  }
 }
 
 #submit-button1:disabled {
+  background-color: #b9b7b700;
   cursor: not-allowed;
 }
 
@@ -245,7 +254,8 @@
   justify-content: flex-start;
 
   background-color: #fffefe;
-  outline: 0.1px solid black;
+  /* outline: 0.1px solid black; */
+  box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.5);
   border-radius: 10px;
   width: 85%;
   margin: 10px;
@@ -264,13 +274,17 @@
   align-items: flex-start;
   margin-top: 1rem;
   width: 88%;
+  margin-bottom: 10px;
 }
 
 #habit-form-second-row {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  border-radius: 10px;
+  width: 100%;
+  background-color: #fffefe;
 }
 
 #habit-type-options-created {
@@ -281,7 +295,7 @@
   width: 30em;
   height: 50px;
   border-radius: 40px;
-  
+  margin-bottom: 10px;
 }
 
 .habit-type-option1 {
@@ -313,7 +327,7 @@
   justify-content: flex-start;
 
   background-color: #fffefe;
-  outline: 0.1px solid black;
+  box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.5);
   border-radius: 10px;
   width: 100%;
   margin: 10px;
@@ -379,7 +393,7 @@
   justify-content: center;
 
   background-color: #fffefe;
-  outline: 0.1px solid black;
+  box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.5);
   border-radius: 10px;
   width: 100%;
   margin: 10px;
