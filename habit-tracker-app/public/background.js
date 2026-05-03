@@ -19,23 +19,98 @@ chrome.runtime.onConnect.addListener((port) => {
     port.onDisconnect.addListener(() => {
       isPopupOpen = false;
       console.log("Popup disconnected, isPopupOpen set to false");
-    });
+      var randIndex = Math.floor(Math.random() * 3);
+
+      // const [hours, minutes] = habit.reminder.time.split(":");
+      const alarmTime = new Date();
+      // alarmTime.setHours(parseInt(alarmTime.getHours()), parseInt(alarmTime.getMinutes()), 0, 0);
+
+      if (randIndex === 0) {
+        const message = "Don't forget to check in on your habits today! Consistency is key to success.";
+        const stringifyName =
+          randIndex + "|" + message + "|" + "Habit.lio misses you!" + "|" + "Random"; // Combine message and habit name for later use
+        // Schedule repeating alarm every 24 hours
+        // Switch back to createdHabit.name if it doesn't work
+        chrome.alarms.create(stringifyName, {
+          when: alarmTime.getTime() + 240 * 60 * 1000, // Schedule for 2 minutes later for testing purposes
+          periodInMinutes: 240, // 4 hours  // 24 hours // 1440 minutes in a day
+        });
+      // chrome.notifications.create({
+      //   type: "basic",
+      //   iconUrl: chrome.runtime.getURL("icons/Habitlio-Icon48.png"),
+      //   title: "Habit.lio",
+      //   message: "Check in on your habits and keep up the good work!",
+      //   priority: 1
+      // });
+    } else if (randIndex === 1) {
+        const message = "Every step counts. Stay consistent with your habits!";
+        const stringifyName =
+          randIndex + "|" + message + "|" + "Missed call from Habit.lio🗣️🗣️" + "|" + "Random"; // Combine message and habit name for later use
+        // Schedule repeating alarm every 24 hours
+        // Switch back to createdHabit.name if it doesn't work
+        chrome.alarms.create(stringifyName, {
+          when: alarmTime.getTime() + 240 * 60 * 1000, // Schedule for 2 minutes later for testing purposes
+          periodInMinutes: 240, // 24 hours // 1440 minutes in a day
+        });
+        // chrome.notifications.create({
+        //   type: "basic",
+        //   iconUrl: chrome.runtime.getURL("icons/Habitlio-Icon48.png"),
+        //   title: "Habit.lio",
+        //   message: "Every step counts. Stay consistent with your habits!",
+        //   priority: 1
+        // });
+    } else {
+        const message = "Remember, progress is progress no matter how small. Keep it up!";
+        const stringifyName =
+          randIndex + "|" + message + "|" + "YO! Check in with Habit.lio." + "|" + "Random"; // Combine message and habit name for later use
+        // Schedule repeating alarm every 24 hours
+        // Switch back to createdHabit.name if it doesn't work
+        chrome.alarms.create(stringifyName, {
+          when: alarmTime.getTime() + 240 * 60 * 1000, // Schedule for 2 minutes later for testing purposes
+          periodInMinutes: 240, // 24 hours // 1440 minutes in a day
+        });
+      // chrome.notifications.create({
+      //   type: "basic",
+      //   iconUrl: chrome.runtime.getURL("icons/Habitlio-Icon48.png"),
+      //   title: "Habit.lio",
+      //   message: "Remember, progress is progress no matter how small. Keep it up!",
+      //   priority: 1
+      // });
+  }});
   }
 });
 
-const showNotification = setInterval(() => {
+/*const showNotification = setInterval(() => {
   if (!isPopupOpen) {
     console.log("Popup is closed, showing notification");
     var randIndex = Math.floor(Math.random() * 3);
     if (randIndex === 0) {
-      chrome.notifications.create({
-        type: "basic",
-        iconUrl: chrome.runtime.getURL("icons/Habitlio-Icon48.png"),
-        title: "Habit.lio",
-        message: "Check in on your habits and keep up the good work!",
-        priority: 1
+      const message = "Don't forget to check in on your habits today! Consistency is key to success.";
+      const stringifyName =
+        randIndex + "|" + message + "|" + "Habit.lio misses you!"; // Combine message and habit name for later use
+      // Schedule repeating alarm every 24 hours
+      // Switch back to createdHabit.name if it doesn't work
+      chrome.alarms.create(stringifyName, {
+        when: alarmTime.getTime(),
+        periodInMinutes: 2, // 24 hours // 1440 minutes in a day
       });
+      // chrome.notifications.create({
+      //   type: "basic",
+      //   iconUrl: chrome.runtime.getURL("icons/Habitlio-Icon48.png"),
+      //   title: "Habit.lio",
+      //   message: "Check in on your habits and keep up the good work!",
+      //   priority: 1
+      // });
     } else if (randIndex === 1) {
+      const message = "Don't forget to check in on your habits today! Consistency is key to success.";
+      const stringifyName =
+        randIndex + "|" + message + "|" + "Habit.lio misses you!"; // Combine message and habit name for later use
+      // Schedule repeating alarm every 24 hours
+      // Switch back to createdHabit.name if it doesn't work
+      chrome.alarms.create(stringifyName, {
+        when: alarmTime.getTime(),
+        periodInMinutes: 2, // 24 hours // 1440 minutes in a day
+      });
       chrome.notifications.create({
         type: "basic",
         iconUrl: chrome.runtime.getURL("icons/Habitlio-Icon48.png"),
@@ -53,7 +128,7 @@ const showNotification = setInterval(() => {
       });
     }
   }
-}, 3600000); // Send notification every hour to encourage user to open habit tracker
+}, 3600000);*/ // Send notification every hour to encourage user to open habit tracker
 
 
 
@@ -88,12 +163,24 @@ chrome.alarms.onAlarm.addListener((alarm) => {
   // console.log("Alarm received:", alarm.name);
   const name = alarm.name.split("|")[2]; // Extract habit name from the combined string
   const message = alarm.name.split("|")[1]; // Extract custom message from the combined string
-  chrome.notifications.create({
-    type: "basic",
-    iconUrl: chrome.runtime.getURL("icons/Habitlio-Icon48.png"),
-    title: "Habit Reminder!",
-    message: message === "" 
-    ? `Time to work on: ${name}` : `Time to work on: ${name} \n${message}`, // I am unsure how to use the custom message here on reminder creation
-    priority: 2
-  });
+  const checkRandom = alarm.name.split("|")[3]; // Check if it's a random notification
+  // console.log("Alarm details - Name:", name, "Message:", message, "CheckRandom:", checkRandom); // Debugging line to check the extracted values
+  if (checkRandom === "Random") {
+    chrome.notifications.create({
+      type: "basic",
+      iconUrl: chrome.runtime.getURL("icons/Habitlio-Icon48.png"),
+      title: name,
+      message: message, 
+      priority: 2
+    });
+  } else {
+    chrome.notifications.create({
+      type: "basic",
+      iconUrl: chrome.runtime.getURL("icons/Habitlio-Icon48.png"),
+      title: "Habit Reminder!",
+      message: message === "" 
+      ? `Time to work on: ${name}` : `Time to work on: ${name} \n${message}`, // I am unsure how to use the custom message here on reminder creation
+      priority: 2
+    });
+  }
 });
