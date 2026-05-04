@@ -148,7 +148,7 @@ function Profile({ uid, onClose }) {
       const priorities = ["1", "2", "3", "4"];
       const priorityCounts = priorities.map(
         (p) =>
-          fetched.filter((h) => (h.priority || "1") === p)
+          fetched.filter((h) => h.isActive === true && (h.priority || "1") === p)
             .length,
       );
       setPieData({
@@ -430,7 +430,7 @@ function Profile({ uid, onClose }) {
               </div>
 
               <div className="profile-section" style={{ textAlign: "center" }}>
-                <h3>Priority Distribution</h3>
+                <h3>Active Priority Distribution</h3>
                 <div
                   style={{
                     height: "220px",
