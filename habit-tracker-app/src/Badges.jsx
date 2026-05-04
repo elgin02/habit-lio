@@ -43,11 +43,11 @@ function Badges({ uid, habits, onClose }) {
     if (!uid) return;
     const load = async () => {
       try {
-        const [stored, friendCount] = await Promise.all([
+        const [stored, currentFriends] = await Promise.all([
           getEarnedBadges(uid),
           getFriends(uid)
         ]);
-        const freshNew = checkBadges(habits, stored, friendCount);
+        const freshNew = checkBadges(habits, stored, currentFriends);
         const freshIds = freshNew.map((b) => b.id);
         const merged = Array.from(new Set([...stored, ...freshIds]));
         if (freshIds.length > 0) await saveEarnedBadges(uid, merged);
