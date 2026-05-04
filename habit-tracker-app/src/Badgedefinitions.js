@@ -39,6 +39,20 @@ export const BADGES = [
     emoji: "💯",
     category: "streak",
   },
+  {
+    id: "streak_365",
+    name: "365 Day Streak: ",
+    description: "Reach a 365-day streak on any habit",
+    emoji: "1️⃣",
+    category: "streak",
+  },
+  {
+    id: "streak_1000",
+    name: "1000 Day Streak: ",
+    description: "Reach a 1000-day streak on any habit",
+    emoji: "👑",
+    category: "streak",
+  },
   // completion badges
   {
     id: "completions_1",
@@ -104,6 +118,20 @@ export const BADGES = [
     emoji: "🏆",
     category: "habits_created",
   },
+  {
+    id: "habits_created_20",
+    name: "20 Habits Created: ",
+    description: "Create 20 habits",
+    emoji: "🤩",
+    category: "habits_created",
+  },
+  {
+    id: "habits_created_40",
+    name: "40 Habits Created: ",
+    description: "Create 40 habits",
+    emoji: "💪",
+    category: "habits_created",
+  },
   // consistency badges
   {
     id: "consistency_all_week",
@@ -126,9 +154,45 @@ export const BADGES = [
     emoji: "⭐",
     category: "consistency",
   },
+  // friend badges
+  {
+    id: "friend_1",
+    name: "First Friend: ",
+    description: "Add a friend",
+    emoji: "👋",
+    category: "friends",
+  },
+  {
+    id: "friend_5",
+    name: "Fifth Friend: ",
+    description: "Add five friends",
+    emoji: "🤜🤛",
+    category: "friends",
+  },
+  {
+    id: "friend_10",
+    name: "Tenth Friend: ",
+    description: "Add 10 friends",
+    emoji: "👥",
+    category: "friends",
+  },
+  {
+    id: "friend_30",
+    name: "Thirtieth Friend: ",
+    description: "Add 30 friends",
+    emoji: "😎",
+    category: "friends",
+  },
+  {
+    id: "friend_100",
+    name: "One-hundredth Friend: ",
+    description: "Add 100 friends",
+    emoji: "❤️",
+    category: "friends",
+  },
 ];
 
-export function checkBadges(habits = [], earnedIds = []) {
+export function checkBadges(habits = [], earnedIds = [], friendCount = 0) {
   const newlyEarned = [];
 
   const totalCompletions = habits.reduce(
@@ -162,6 +226,12 @@ export function checkBadges(habits = [], earnedIds = []) {
       case "streak_100":
         earned = maxStreak >= 100;
         break;
+      case "streak_365":
+        earned = maxStreak >= 365;
+        break;
+      case "streak_1000":
+        earned = maxStreak >= 1000;
+        break;
       case "completions_1":
         earned = totalCompletions >= 1;
         break;
@@ -188,6 +258,27 @@ export function checkBadges(habits = [], earnedIds = []) {
         break;
       case "habits_created_10":
         earned = habitCount >= 10;
+        break;
+      case "habits_created_20":
+        earned = habitCount >= 20;
+        break;
+      case "habits_created_40":
+        earned = habitCount >= 40;
+        break;
+      case "friend_1":
+        earned = friendCount >= 1;
+        break;
+      case "friend_5":
+        earned = friendCount >= 5;
+        break;
+      case "friend_10":
+        earned = friendCount >= 10;
+        break;
+      case "friend_30":
+        earned = friendCount >= 30;
+        break;
+      case "friend_100":
+        earned = friendCount >= 100;
         break;
       case "consistency_all_week": {
         const today = new Date();
@@ -232,6 +323,7 @@ export function checkBadges(habits = [], earnedIds = []) {
         }
         break;
       }
+
 
       default:
         break;

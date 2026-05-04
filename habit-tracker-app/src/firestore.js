@@ -879,3 +879,16 @@ export const sendMessage = async (chatId, senderUid, text) => {
     timestamp: serverTimestamp(),
   });
 };
+
+export const getFriends = async (userId) => {
+  if (!userId) return 0;
+
+  try {
+    const friendsRef = collection(db, "users", userId, "friends");
+    const friendsSnapshot = await getDocs(friendsRef);
+    return friendsSnapshot.size;
+  } catch (error) {
+    console.error("Error fetching friend count:", error);
+    return 0;
+  }
+};
