@@ -19,10 +19,11 @@ function Menu({ onHomeClick, addHabit, setShowFriendsPage, setShowMessagesPage, 
       <div id="menu">
         {" "}
         <button
+          className="menu-btns"
           id="home-btn"
           title="Home"
           onClick={() => {
-            onHomeClick;
+            onHomeClick();
             setShowFriendsPage(false);
             setShowMessagesPage(false);
           }}
@@ -30,18 +31,20 @@ function Menu({ onHomeClick, addHabit, setShowFriendsPage, setShowMessagesPage, 
           {" "}
           <House color="black" />{" "}
         </button>{" "}
-        <span className="divider"></span>
+        {/* <span className="divider"></span> */}
         <button
+          className="menu-btns"
           id="profile-btn"
           title="Profile"
           onClick={() => setShowProfile(true)}
         >
           <CircleUser color="black" />
         </button>
-     <span className="divider"></span>{" "}
+     {/* <span className="divider"></span>{" "} */}
         <button
           id="badges-btn"
           title="Badges"
+          className="menu-btns"
           onClick={() => setShowBadges(true)}
         >
           <Medal color="black" />
@@ -54,6 +57,7 @@ function Menu({ onHomeClick, addHabit, setShowFriendsPage, setShowMessagesPage, 
         <button
           id="friends-btn"
           title="Friends"
+          className="menu-btns"
           onClick={() => {
             setShowFriendsPage(true);
             setShowMessagesPage(false);
@@ -62,10 +66,11 @@ function Menu({ onHomeClick, addHabit, setShowFriendsPage, setShowMessagesPage, 
           {" "}
           <Users color="black" />{" "}
         </button>{" "}
-        <span className="divider"></span>
+        {/* <span className="divider"></span> */}
         <button 
           id="mail-btn" 
           title="Messages"
+          className="menu-btns"
           onClick={() => {
             setShowMessagesPage(true);
             setShowFriendsPage(false);
@@ -74,10 +79,11 @@ function Menu({ onHomeClick, addHabit, setShowFriendsPage, setShowMessagesPage, 
           {" "}
           <Mail color="black" />{" "}
         </button>{" "}
-        <span className="divider"></span>{" "}
+        {/* <span className="divider"></span> */}
         <button
           id="more-btn"
           title="Settings"
+          className="menu-btns"
           onClick={() => setShowSettings(true)}
         >
           {" "}

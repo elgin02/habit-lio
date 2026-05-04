@@ -8,11 +8,15 @@
     border-radius: 16px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     width: 28rem;
+    &:hover{
+        transform: translateY(-2px);
+        /* box-shadow: 0px 0px 5px 1px rgba(255, 255, 255, 0.75); */
+    }
 }
 
-.habit-created:hover{
+/* .habit-created:hover{
     box-shadow: 0px 0px 5px 1px rgba(255, 255, 255, 0.75);
-}
+} */
 
 .habit-checkbox {
     width: 24px;

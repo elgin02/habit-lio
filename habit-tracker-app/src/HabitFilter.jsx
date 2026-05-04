@@ -15,7 +15,7 @@ function HabitFilter({ filter, setFilter, secondaryFilter, setSecondaryFilter })
     <div id="habit-filters">
         <label htmlFor="habit-filter">Filter by:</label>
         <select id="habit-filter" value={filter} onChange={(e) => setFilter(e.target.value)}>
-            <option value="incomplete">Incomplete Habits</option>
+            <option value="incomplete">Ongoing Habits</option>
             <option value="completed">Completed Habits</option>
             <option value="priority">Priority</option>
             <option value="alpha">Alphabetical Order</option>

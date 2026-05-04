@@ -140,7 +140,7 @@ function AffirmationEditing(props){
 
     return(
         <div>
-            <div id="affirmation-editing-container" hidden={!props.visible}>
+            <div id="affirmation-editing-container" style={{ display: props.visible ? "block" : "none" }}>
                 <div id="affirmation-editing-popup">
                     <div id="affirmation-editing">
                         <h2>Edit Affirmations</h2>

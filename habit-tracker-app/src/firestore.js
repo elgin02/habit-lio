@@ -564,6 +564,7 @@ export const listHabits = async (uid) => {
   const habitsQuery = query(habitsRef, orderBy("createdAt", "desc"));
   const snapshot = await getDocs(habitsQuery);
 
+
   return snapshot.docs.map((docItem) => ({
     id: docItem.id,
     ...docItem.data(),

@@ -83,8 +83,10 @@ function HabitWindow(props) {
   return (
     <div>
       <div id="habit-window">
-        <h1 id="habitCategory">{categorySelected}</h1>
-        <p id="category-description">{descriptions[categorySelected]}</p>
+        <h1 id="habitCategory" style={{ color: "white" }}>
+          {categorySelected}
+        </h1>
+        <p id="category-description" style={{color: "white"}}>{descriptions[categorySelected]}</p>
         <div
           hidden={categorySelected !== "Popular"}
           className="custom-habit-form"
@@ -299,12 +301,15 @@ function CheckBoxDay({ name, setDaysSelected }) {
 
 function SelectTaskDays(props) {
   // const [error, showError] = useState(false);
-  const isError = props.daysSelected.length === 0;
-  props.setClicked(props.mode === "specific_days" && isError);
-
-  const isError2 = props.daysInMonthSelected.length === 0;
-  props.setClicked(props.mode === "specific_month_days" && isError2);
-
+  let isError;
+  if(props.mode === "specific_days"){
+    isError = props.daysSelected.length === 0;
+    props.setClicked(isError);
+  }
+  if(props.mode === "specific_month_days"){
+    isError = props.daysInMonthSelected.length === 0;
+    props.setClicked(isError);
+}
   console.log("DAYS:" + props.daysSelected);
   return (
     <div>
@@ -313,7 +318,7 @@ function SelectTaskDays(props) {
           <p
             className="days-error"
             style={{ color: "red", fontSize: "14px" }}
-            hidden={!isError2}
+            hidden={!isError}
           >
             Error: Please select at least one day.
           </p>
@@ -636,6 +641,11 @@ function CreateHabitForm(props) {
                 name="value"
                 min="1"
                 max="10000"
+                onInput={(e) => {
+                        const value = parseInt(e.target.value) || 1;
+                        if (value > 10000) e.target.value = 10000;
+                        if (value < 1) e.target.value = 1;
+                 }}
                 placeholder="Enter Number"
                 style={{ fontSize: "18px", textAlign: "center", width: "30%" }}
               />
@@ -839,9 +849,11 @@ function HabitCreate({ addHabit }) {
     var availableCategories = document.getElementsByClassName("habit-type");
     for (var i = 0; i < availableCategories.length; i++) {
       if (availableCategories[i].title === categoryName) {
-        availableCategories[i].style.backgroundColor = "#b9b7b7";
+        availableCategories[i].style.backgroundColor = "#493486";
+        availableCategories[i].style.boxShadow = "0px 4px 10px rgba(73, 52, 134, 0.5)";
       } else {
         availableCategories[i].style.backgroundColor = "#ffffff";
+        availableCategories[i].style.boxShadow = "none";
       }
     }
   };
@@ -869,8 +881,8 @@ function HabitCreate({ addHabit }) {
                     depending on whether custom was selected or button was clicked */}
           {category !== "Custom" ? (
             <div>
-              <h2 id="habit-title" style={{ fontSize: "36px", color: "black" }}>
-                Select a Habit to Track:
+              <h2 id="habit-title" style={{ fontSize: "36px", color: "white" }}>
+                Select a Habit to Track
               </h2>
               <div id="habit-layout">
                 <div id="habit-types">
@@ -967,7 +979,7 @@ function HabitCreate({ addHabit }) {
           )}
         </div>
       </div>
-      <button id="add-btn" title="Add Habit" onClick={handleClick}>
+      <button className="menu-btns" id="add-btn" title="Add Habit" onClick={handleClick}>
         <CirclePlus color="black" size={32}/>
       </button>
     </div>

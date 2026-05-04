@@ -5,12 +5,19 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
-  min-width: 90vw;
+  min-height: 100dvh;
+  min-width: 95dvw;
+  /* border: 20px solid white; */
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
-  background-color: #F9FAFB;
+  /* background-color: #F9FAFB; */
+  /* background: linear-gradient(135deg, #a8c0ff, #3f2b96); */
+  /* background: linear-gradient(-135deg, #4e54c8, #8f94fb); */
+  background: #152331;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #000000, #152331);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #000000, #152331); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
 }
 
 .logo {
@@ -32,6 +39,7 @@ h3,
 h4,
 p {
   color: white;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif !important;
 }
 
 @keyframes logo-spin {
@@ -63,14 +71,16 @@ p {
   align-items: center;
   margin-left: 0%;
   margin-right: 0%;
-  width: 40rem;
-  height: 4rem;
+  width: 90dvw;
+  height: 10dvh;
   /* overflow: visible; */
   /* stroke: white;
   stroke-width: 10px; */
   /* outline: white solid 1px; */
-  background-color: rgb(203, 203, 203);
-  box-shadow: 0px 1px 5px 0px 25px #000000;
+  /* background-color: rgba(255, 255, 255, 1); */
+  /* background-color: #483486; */
+  background-color: #ffffff;
+  box-shadow: 0px 4px 10px rgba(237, 236, 236, 0.5);
   border-radius: 20px;
 }
 
@@ -80,8 +90,10 @@ button {
 }
 
 .divider {
-  border-left: 1px solid #ffffff;
-  height: 100%;
+  /* border-left: 1px solid #000000; */
+  /* border-left: 2px solid #3f2d75; */
+  border-left: 2px solid #dbdbdb;
+  height: 40%;
 }
 
 #home-btn,
@@ -94,15 +106,44 @@ button {
   background-color: rgba(255, 255, 255, 0);
 }
 
-/* .icon-circle-ellipsis{
-  background-color: rgba(0, 0, 0, 1);
-} */
-/* #home-btn, #user-btn {
-  background-color: white;
-  border: solid transparent;
-  font-size: 1.2em;
-  cursor: pointer;
-} */
+.menu-btns:hover {
+  background-color: rgb(214, 214, 214) !important;
+}
+
+#greeting-home{
+  /* font-family: monospace; */
+  font-size: 4vw;
+  text-wrap: pretty;
+  /* color: black; */
+  color: white;
+  overflow: hidden; /* Hide the text until it is "typed" */
+  border-right: .15em solid black; /* The blinking cursor */
+  white-space: nowrap; /* Keep text on one line */
+  /* margin: 0 auto;  */
+  letter-spacing: .15em; 
+  width: 0; /* Initial state */
+  /* 
+     - "typing": animates the width 
+     - "blink-caret": animates the cursor color 
+     - "steps(25)": set this to the number of characters in your text
+  */
+  animation: 
+  typing 1.5s steps(25, end) forwards,
+  blink-caret .75s step-end 3 forwards;
+}
+
+/* Reveal text from 0 to 100% width */
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+/* Animate cursor transparency to create blinking */
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: white; }
+  
+}
 
 #habits-display{
   display: flex;
@@ -137,8 +178,15 @@ button {
   /* width: 60vw; */
   width: 0vw;
   /* height: 5vh; */
-  height: 0vh;
-  background-color: #1fa50a;
+  height: 0.5vh;
+  background-color: white;
   animation-name: loading;
   animation-duration: 2s;
+}
+
+.app-arrows{
+  background-color: transparent;
+  &:disabled{
+    opacity: 0.5;
+  }
 }
