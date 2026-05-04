@@ -28,7 +28,7 @@ import { completeHabit } from "./second-firestore";
 import "./App.css";
 import "./Login.css";
 // import icons from Lucide React
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, CircleChevronLeft, CircleChevronRight } from "lucide-react";
 import googleIcon from "./icons/google_icon.png";
 import Menu from "./Menu";
 import HabitCreate from "./habitCreate";
@@ -42,6 +42,7 @@ import Onboarding from "./onboarding/Onboarding.jsx";
 import Affirmation from "./onboarding/affirmation.jsx";
 import AffirmationEditing from "./onboarding/AffirmationEditing.jsx";
 import ForgotPassword from "./additionalLogin/ForgotPassword.jsx";
+import ToDoCalendar from "./habitComponents/ToDoCalendar.jsx";
 // import Messages from "./Messages.jsx";
 
 function App() {
@@ -67,6 +68,7 @@ function App() {
   const [filter, setFilter] = useState("incomplete");
   const [secondaryFilter, setSecondaryFilter] = useState(null);
   const [showAffirmationEditing, setShowAffirmationEditing] = useState(false);
+  const [showAffirmation, setShowAffirmation] = useState(true);
 
   // Load in the habits for the user,
   // called after login and after edits/deletes to refresh the habit list
@@ -394,17 +396,54 @@ function App() {
                 hidden={showFriendsPage || showMessagesPage}>
                   Welcome, <strong>{(greetUsername && username) ? username : user?.email}</strong>!
                 </p>
+                
+                <div style={{display: "flex", 
+                  flexDirection: "row",
+                  justifyContent: "space-evenly", 
+                  alignItems: "center"}}>
+                  <button className="app-arrows" 
+                  title={!showAffirmation ? "Show Affirmation View" : "Nothing to show"}
+                  disabled={showAffirmation} 
+                  onClick={() => setShowAffirmation(true)}>
+                    <CircleChevronLeft size={64} color={showAffirmation ? "lightgray" : "white"} />
+                  </button>
 
-                <div 
-                  style={{ 
-                    display: showFriendsPage || showMessagesPage ? "none" : "flex",
-                    justifyContent: "center", 
-                    alignItems: "center",
-                  }}
-                >
-                  <Affirmation user={user} 
-                  affirmations={affirmations} getAffirmations={getAffirmations} 
-                  setShowAffirmationEditing={setShowAffirmationEditing}/>
+                  <div 
+                    style={{ 
+                      display: showFriendsPage 
+                      || showMessagesPage || !showAffirmation ? "none" : "flex",
+                      justifyContent: "center", 
+                      alignItems: "center",
+                    }}
+                  >
+                    <Affirmation user={user} 
+                    affirmations={affirmations} getAffirmations={getAffirmations} 
+                    setShowAffirmationEditing={setShowAffirmationEditing}/>
+                  </div>
+
+                  <div 
+                    style={{ 
+                      display: showFriendsPage 
+                      || showMessagesPage || showAffirmation ? "none" : "flex",
+                      justifyContent: "center", 
+                      alignItems: "center",
+                    }}
+                  >
+                    <ToDoCalendar habits={habits}
+                    uid={user.uid}
+                    loadHabits={loadHabits}
+                    completeHabitEarly={completeHabitEarly}
+                    onEdit={(habit) => setSelectedHabit(habit)} 
+                    />
+                  </div>
+
+
+                  <button className="app-arrows" 
+                  title={showAffirmation ? "Show Calendar View" : "Nothing to show"}
+                  disabled={!showAffirmation} 
+                  onClick={() => setShowAffirmation(false)}>
+                    <CircleChevronRight size={64} color={!showAffirmation ? "lightgray" : "white"} />
+                  </button>
                 </div>
 
                   <AffirmationEditing user={user} visible={showAffirmationEditing} 

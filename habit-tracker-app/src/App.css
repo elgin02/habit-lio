@@ -183,3 +183,10 @@ button {
   animation-name: loading;
   animation-duration: 2s;
 }
+
+.app-arrows{
+  background-color: transparent;
+  &:disabled{
+    opacity: 0.5;
+  }
+}
