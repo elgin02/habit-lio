@@ -849,8 +849,8 @@ function HabitCreate({ addHabit }) {
     var availableCategories = document.getElementsByClassName("habit-type");
     for (var i = 0; i < availableCategories.length; i++) {
       if (availableCategories[i].title === categoryName) {
-        availableCategories[i].style.backgroundColor = "#493486";
-        availableCategories[i].style.boxShadow = "0px 4px 10px rgba(73, 52, 134, 0.5)";
+        availableCategories[i].style.backgroundColor = "#646363";
+        availableCategories[i].style.boxShadow = "0px 0px 10px rgba(255, 255, 255, 1)";
       } else {
         availableCategories[i].style.backgroundColor = "#ffffff";
         availableCategories[i].style.boxShadow = "none";
@@ -959,8 +959,8 @@ function HabitCreate({ addHabit }) {
             </div>
           ) : (
             <div>
-              <h2 id="habit-title" style={{ fontSize: "36px", color: "black" }}>
-                Create Habit:
+              <h2 id="habit-title" style={{ fontSize: "36px", color: "white" }}>
+                Create Habit
               </h2>
               <div id="create-habit-container">
                 <div id="create-habit">

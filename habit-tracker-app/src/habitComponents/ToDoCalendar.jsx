@@ -76,12 +76,12 @@ function HabitOnDay(props) {
         <div className="habits-on-day-inner">
           {(props.date < new Date().setHours(0, 0, 0, 0)) && (
             <h3 
-            style={{color: "white", fontSize: "32px"}}>
+            style={{color: "black", fontSize: "32px"}}>
               Habits that were to be done on {props.date ? props.date.toLocaleDateString() : "No date selected"}</h3>
           )}
            {(props.date >= new Date().setHours(0, 0, 0, 0)) && (
           <h3 
-          style={{color: "white", fontSize: "32px"}}>
+          style={{color: "black", fontSize: "32px"}}>
             Habits to be done on {props.date ? props.date.toLocaleDateString() : "No date selected"}</h3>
           )}
           {habitsOnDay.length > 0 ? (
