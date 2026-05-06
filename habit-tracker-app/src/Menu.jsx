@@ -10,7 +10,7 @@ import { useState } from "react";
 import SettingsPopup from "./Settings.jsx";
 import Badges from "./Badges.jsx";
 
-function Menu({ onHomeClick, addHabit, setShowFriendsPage, setShowMessagesPage, uid, habits }) {
+function Menu({ onHomeClick, addHabit, setShowFriendsPage, setShowMessagesPage, uid, habits, setShowAffirmation }) {
   const [showSettings, setShowSettings] = useState(false);
   const [showBadges, setShowBadges] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
@@ -26,6 +26,7 @@ function Menu({ onHomeClick, addHabit, setShowFriendsPage, setShowMessagesPage, 
             onHomeClick();
             setShowFriendsPage(false);
             setShowMessagesPage(false);
+            setShowAffirmation(true);
           }}
         >
           {" "}
@@ -61,6 +62,7 @@ function Menu({ onHomeClick, addHabit, setShowFriendsPage, setShowMessagesPage, 
           onClick={() => {
             setShowFriendsPage(true);
             setShowMessagesPage(false);
+            setShowAffirmation(false);
           }}
         >
           {" "}
@@ -74,6 +76,7 @@ function Menu({ onHomeClick, addHabit, setShowFriendsPage, setShowMessagesPage, 
           onClick={() => {
             setShowMessagesPage(true);
             setShowFriendsPage(false);
+            setShowAffirmation(false);
           }}
         >
           {" "}

@@ -390,6 +390,7 @@ function App() {
                   habits={habits}
                   setShowFriendsPage={setShowFriendsPage}
                   setShowMessagesPage={setShowMessagesPage}
+                  setShowAffirmation={setShowAffirmation}
                 />
                 <p 
                 id="greeting-home"
@@ -403,7 +404,8 @@ function App() {
                   alignItems: "center"}}>
                   <button className="app-arrows" 
                   title={!showAffirmation ? "Show Affirmation View" : "Nothing to show"}
-                  disabled={showAffirmation} 
+                  disabled={!showAffirmation} 
+                  hidden={!showAffirmation}
                   onClick={() => setShowAffirmation(true)}>
                     <CircleChevronLeft size={64} color={showAffirmation ? "lightgray" : "white"} />
                   </button>
@@ -441,6 +443,7 @@ function App() {
                   <button className="app-arrows" 
                   title={showAffirmation ? "Show Calendar View" : "Nothing to show"}
                   disabled={!showAffirmation} 
+                  hidden={!showAffirmation}
                   onClick={() => setShowAffirmation(false)}>
                     <CircleChevronRight size={64} color={!showAffirmation ? "lightgray" : "white"} />
                   </button>
@@ -449,19 +452,24 @@ function App() {
                   <AffirmationEditing user={user} visible={showAffirmationEditing} 
                   setVisible={setShowAffirmationEditing} affirmations={affirmations} />
 
-                {showFriendsPage && (
+                {showFriendsPage && ( 
                   <div>
                     <FriendsPage 
                       setFriendMessage={setFriendMessage} 
                       setShowMessagesPage={setShowMessagesPage} 
                       setShowFriendsPage={setShowFriendsPage} 
+                    //  setShowAffirmation={setShowAffirmation}
                     />
                   </div>
                 )}
 
                 {showMessagesPage && (
                   <div>
-                    <Messages uid={user.uid} selectedFriend={friendMessage} />
+                    <Messages 
+                      uid={user.uid} 
+                      selectedFriend={friendMessage} 
+                     // setShowAffirmation={setShowAffirmation}
+                    />
                   </div>
                 )}
 

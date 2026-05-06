@@ -71,7 +71,9 @@ p {
   align-items: center;
   margin-left: 0%;
   margin-right: 0%;
-  width: 90dvw;
+  margin: 0 auto;
+  min-width: 50vw;
+  max-width: 90vw;
   height: 10dvh;
   /* overflow: visible; */
   /* stroke: white;
