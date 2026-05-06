@@ -256,6 +256,7 @@ function AffirmationInput({ index, affirmation, setAffirmations, remove}) {
 
   const generateAffirmation = async () => {
     setDisabled(true);
+    setAffirmationText("Generating...");
     const response = await generateAffirmations();
     // console.log("Generated Affirmation: ", response);
     setAffirmationText(response);
@@ -496,102 +497,106 @@ function OnboardingPopup(props) {
         style={{ display: props.hidden ? "none" : "block" }}
       >
         <div id="onboarding">
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <div id="dots-container">
-              <div
-                className="dot"
-                style={{
-                  backgroundColor:
-                    currentPage === "Page1"
-                      ? "rgba(145, 145, 145, 1)"
-                      : "rgba(145, 145, 145, 0.5)",
-                }}
-              ></div>
-              <div
-                className="dot"
-                style={{
-                  backgroundColor:
-                    currentPage === "Page2"
-                      ? "rgba(145, 145, 145, 1)"
-                      : "rgba(145, 145, 145, 0.5)",
-                }}
-              ></div>
-              <div
-                className="dot"
-                style={{
-                  backgroundColor:
-                    currentPage === "Page3"
-                      ? "rgba(145, 145, 145, 1)"
-                      : "rgba(145, 145, 145, 0.5)",
-                }}
-              ></div>
-              <div
-                className="dot"
-                style={{
-                  backgroundColor:
-                    currentPage === "Page4"
-                      ? "rgba(145, 145, 145, 1)"
-                      : "rgba(145, 145, 145, 0.5)",
-                }}
-              ></div>
-              <div
-                className="dot"
-                style={{
-                  backgroundColor:
-                    currentPage === "Page5"
-                      ? "rgba(145, 145, 145, 1)"
-                      : "rgba(145, 145, 145, 0.5)",
-                }}
-              ></div>
-              <div
-                className="dot"
-                style={{
-                  backgroundColor:
-                    currentPage === "Page6"
-                      ? "rgba(145, 145, 145, 1)"
-                      : "rgba(145, 145, 145, 0.5)",
-                }}
-              ></div>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <div id="dots-container">
+                <div
+                  className="dot"
+                  style={{
+                    backgroundColor:
+                      currentPage === "Page1"
+                        ? "rgba(145, 145, 145, 1)"
+                        : "rgba(145, 145, 145, 0.5)",
+                  }}
+                ></div>
+                <div
+                  className="dot"
+                  style={{
+                    backgroundColor:
+                      currentPage === "Page2"
+                        ? "rgba(145, 145, 145, 1)"
+                        : "rgba(145, 145, 145, 0.5)",
+                  }}
+                ></div>
+                <div
+                  className="dot"
+                  style={{
+                    backgroundColor:
+                      currentPage === "Page3"
+                        ? "rgba(145, 145, 145, 1)"
+                        : "rgba(145, 145, 145, 0.5)",
+                  }}
+                ></div>
+                <div
+                  className="dot"
+                  style={{
+                    backgroundColor:
+                      currentPage === "Page4"
+                        ? "rgba(145, 145, 145, 1)"
+                        : "rgba(145, 145, 145, 0.5)",
+                  }}
+                ></div>
+                <div
+                  className="dot"
+                  style={{
+                    backgroundColor:
+                      currentPage === "Page5"
+                        ? "rgba(145, 145, 145, 1)"
+                        : "rgba(145, 145, 145, 0.5)",
+                  }}
+                ></div>
+                <div
+                  className="dot"
+                  style={{
+                    backgroundColor:
+                      currentPage === "Page6"
+                        ? "rgba(145, 145, 145, 1)"
+                        : "rgba(145, 145, 145, 0.5)",
+                  }}
+                ></div>
+              </div>
+            </div>
+            <div id="onboarding-content-container">
+              <div id="onboarding-content">
+                <Page1
+                  currentPage={currentPage}
+                  setCurrentPage={setCurrentPage}
+                  isGoogleUser={isGoogleUser}
+                />
+
+              <Page2
+                currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
+                setUserInfo={setUserInfo}
+                user={user}
+              />
+
+              <Page3
+                currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
+                user={user}
+              />
+
+              <Page4
+                currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
+                setUserInfo={setUserInfo}
+              />
+
+              <Page5
+                currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
+                setUserInfo={setUserInfo}
+              />
+
+              <Page6 currentPage={currentPage} setCurrentPage={setCurrentPage} />
             </div>
           </div>
-          <Page1
-            currentPage={currentPage}
-            setCurrentPage={setCurrentPage}
-            isGoogleUser={isGoogleUser}
-          />
-
-          <Page2
-            currentPage={currentPage}
-            setCurrentPage={setCurrentPage}
-            setUserInfo={setUserInfo}
-            user={user}
-          />
-
-          <Page3
-            currentPage={currentPage}
-            setCurrentPage={setCurrentPage}
-            user={user}
-          />
-
-          <Page4
-            currentPage={currentPage}
-            setCurrentPage={setCurrentPage}
-            setUserInfo={setUserInfo}
-          />
-
-          <Page5
-            currentPage={currentPage}
-            setCurrentPage={setCurrentPage}
-            setUserInfo={setUserInfo}
-          />
-
-          <Page6 currentPage={currentPage} setCurrentPage={setCurrentPage} />
         </div>
       </div>
     </div>

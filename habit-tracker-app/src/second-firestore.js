@@ -39,11 +39,11 @@ export const saveAffirmations = async (userId, affirmationsArray) => {
   }
 };
 
-export const completeHabit = async (userId, habitId) => {
+export const completeHabit = async (userId, habitId, setActive) => {
   const habitDocRef = doc(db, "users", userId, "habits", habitId);
   try {
     await updateDoc(habitDocRef, {
-      isActive: false,
+      isActive: setActive,
       completedAt: serverTimestamp(),
     });
     console.log("Habit marked as completed!");

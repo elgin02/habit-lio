@@ -42,12 +42,14 @@ function Habit({habit, uid, loadHabits, completeHabitEarly, onEdit}){
     };
 
     const notifyHabitCompletion = () => {
+      if (habit.isActive) {
         chrome.runtime.sendMessage({
           type: "notify",
           reason: "habitCompletion",
           message: `You have successfully completed the habit: ${habit.name}!`,
-      });
-    }
+        });
+      }
+    };
   
   return(
     <div>
@@ -69,9 +71,9 @@ function Habit({habit, uid, loadHabits, completeHabitEarly, onEdit}){
               Goal: {habit.goal.value === "" ? "0" : habit.goal.value}&nbsp; 
               {habit.goal.unit ?? "steps"}&nbsp;/&nbsp;{habit.goal?.period ?? "day"}</h2>
               <button className="habit-completed" 
-              disabled={!habit.isActive}
-              onClick={() => {completeHabitEarly(habit.id); notifyHabitCompletion(); }}>
-                {habit.isActive ? "Complete Habit Early" : "Habit Completed"}
+              disabled={habit.endDate && new Date(habit.endDate) < new Date()}
+              onClick={() => {completeHabitEarly(habit.id, !habit.isActive); notifyHabitCompletion(); }}>
+                {habit.isActive ? "Complete Habit Early" : "Uncomplete Habit"}
               </button>
               <br />
         </div>
