@@ -2,7 +2,7 @@
   App.jsx is the entry point of the habit tracker, holding the global state and routing to other files
  */
 
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 import {
   GoogleAuthProvider,
   signInWithCredential,
@@ -90,7 +90,7 @@ function App() {
       setGreetUsername(getGreetUsername);
 
       const getAffirmations = await getUserInfo(uid, "affirmations");
-      setAffirmations(getAffirmations);
+      setAffirmations(getAffirmations || []); // Set to empty array if null/undefined
       console.log("Affirmations: ", getAffirmations);
       setLoaded(true);
 
@@ -292,10 +292,10 @@ function App() {
     }
   };
 
-  const completeHabitEarly = async (habitId) => {
+  const completeHabitEarly = async (habitId, setActive) => {
     if (!user) return;
     try {
-      await completeHabit(user.uid, habitId);
+      await completeHabit(user.uid, habitId, setActive);
       await loadHabits(user.uid);
     }
     catch (error) {
@@ -403,6 +403,12 @@ function App() {
                   justifyContent: "space-evenly", 
                   alignItems: "center"}}>
                   <button className="app-arrows" 
+                    style={{ 
+                      display: showFriendsPage 
+                      || showMessagesPage ? "none" : "flex",
+                      justifyContent: "center", 
+                      alignItems: "center",
+                    }}
                   title={!showAffirmation ? "Show Affirmation View" : "Nothing to show"}
                   disabled={!showAffirmation} 
                   hidden={!showAffirmation}
@@ -441,6 +447,12 @@ function App() {
 
 
                   <button className="app-arrows" 
+                   style={{ 
+                      display: showFriendsPage 
+                      || showMessagesPage ? "none" : "flex",
+                      justifyContent: "center", 
+                      alignItems: "center",
+                    }}
                   title={showAffirmation ? "Show Calendar View" : "Nothing to show"}
                   disabled={!showAffirmation} 
                   hidden={!showAffirmation}
@@ -540,7 +552,7 @@ function App() {
                     {/* Default Filter */}
                     {(filter === "all") && (
                       <div>
-                        {habits.map((habit) => (
+                        {habits?.map((habit) => (
                           <Habit
                             key={habit.id}
                             habit={habit}
@@ -551,7 +563,7 @@ function App() {
                           />
                         
                         ))}
-                        {habits.length === 0 && (
+                        {habits?.length === 0 && (
                           <p style={{ color: "white", fontSize: "16px" }}>
                             No habits yet. Create one to get started!
                           </p>
@@ -561,7 +573,7 @@ function App() {
                     {/* All other filters Filter */}
                     {filter !== "all" && (
                       <div>
-                          {sortedHabits.map((habit) => (
+                          {sortedHabits?.map((habit) => (
                             <Habit
                               key={habit.id}
                               habit={habit}

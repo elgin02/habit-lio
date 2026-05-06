@@ -1,3 +1,6 @@
+input{
+
+}
 #popup-container {
   display: none;
   background-color: rgba(0, 0, 0, 0.35);
@@ -16,7 +19,10 @@
   left: 50%;
   transform: translate(-50%, -50%);
   /* background-color: #e8f6ff; */
-  background: linear-gradient(#4e54c8, #8f94fb);
+  background: #152331;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #1b1b1b, #152331);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #1b1b1b, #152331); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
   color: black;
   width: 35rem;
   height: 35rem;
@@ -111,8 +117,9 @@
 #habit-window {
   /* border: 5px solid black; */
   /* background-color: #ffffff; */
-  background-color: #493486;
-  box-shadow: 0px 4px 10px rgba(73, 52, 134, 0.5);
+  background-color: #898989 ;
+  box-shadow: 0px 0px 10px rgba(123, 123, 123, 0.5);
+  outline: 1px solid white;
   width: 95%;
   border-radius: 25px;
   overflow-y: auto;
@@ -399,6 +406,12 @@
   margin: 10px;
 }
 
+#reminder-time{
+  color: black;
+  background-color: rgba(0, 0, 0, 0);
+  border: 1px solid #767676;
+}
+
 #reminder-message {
   text-align: center;
   font-size: 18px;
@@ -411,6 +424,12 @@
   height: 120px;
 }
 
+#priority1{
+  color:black;
+  background-color: rgba(0, 0, 0, 0);
+  border-radius: 20px;
+}
+
 #habit-term {
   display: flex;
   flex-direction: row;
@@ -418,6 +437,18 @@
   justify-content: space-between;
   gap: 1rem;
   margin-top: -10%;
+}
+
+#start-date-create{
+  color: black;
+  background-color: rgba(0, 0, 0, 0);
+  border: 1px solid #767676;
+}
+
+#end-date-create{
+  color: black;
+  background-color: rgba(0, 0, 0, 0);
+  border: 1px solid #767676;
 }
 
 #add-btn {
